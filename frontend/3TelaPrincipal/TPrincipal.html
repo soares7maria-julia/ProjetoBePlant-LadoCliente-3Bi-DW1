@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BePlant - Sua Loja de Plantas 🌱</title>
+  <link rel="stylesheet" href="TPrincipal.css">
+</head>
+<body>
+  
+<!-- Cabeçalho Principal -->
+<header class="header">
+  <div class="header-content">
+    <!-- Nome do Site com Ícone -->
+    <div class="logo">
+      <span class="logo-icon">🌿</span>
+      <span class="logo-text">BePlant</span>
+    </div>
+    
+    <!-- Barra de Pesquisa -->
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Pesquisar plantas..." class="search-input">
+      <button class="search-btn">🔍</button>
+    </div>
+    
+    <!-- Área de Login -->
+    <div class="user-area">
+      <button id="login-btn" class="login-btn">LOGIN</button>
+      <span id="nickname" class="nickname" style="display:none;">NICKNAME</span>
+      <button id="logout-btn" class="logout-btn" style="display:none;">Sair</button>
+   
+  <!-- Aqui o carrinho será carregado -->
+  <div id="carrinho-slot"></div>
+</div>
+</header>
+
+<!-- Menu de Categorias -->
+<nav class="categories">
+  <div class="categories-content">
+    <span class="categories-title"></span>
+    <div class="category-items">
+      <button class="category-btn active" data-category="todas">Todas</button>
+      <button class="category-btn" data-category="plantas">Plantas</button>
+      <button class="category-btn" data-category="vasos">Vasos</button>
+      <button class="category-btn" data-category="ferramentas">Ferramentas</button>
+      <button class="category-btn" data-category="sementes">Sementes</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Conteúdo Principal -->
+<main class="main-content">
+  
+  <!-- Seção: Algumas Coisas -->
+  <section class="product-section">
+    <h2 class="section-title">ALGUMAS COISAS</h2>
+    <div id="algumas-coisas" class="products-grid">
+      <!-- Produtos serão carregados via JS -->
+    </div>
+  </section>
+  
+  <!-- Seção: Outras Coisas -->
+  <section class="product-section">
+    <h2 class="section-title">OUTRAS COISAS</h2>
+    <div id="outras-coisas" class="products-grid">
+      <!-- Produtos serão carregados via JS -->
+    </div>
+  </section>
+  
+</main>
+
+<script src="TPrincipal.js"></script>
+<script>
+  // Carregar carrinho.html dinamicamente
+  fetch("carrinho.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("carrinho-slot").innerHTML = html;
+      // depois que o HTML do carrinho é injetado, carrega o JS dele
+      let script = document.createElement("script");
+      script.src = "carrinho.js";
+      document.body.appendChild(script);
+    });
+</script>
+</body>
+</html>
+

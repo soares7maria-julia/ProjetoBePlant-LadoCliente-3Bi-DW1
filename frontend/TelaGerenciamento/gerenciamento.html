@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BePlant - Painel de Gerenciamento</title>
+  <link rel="stylesheet" href="gerenciamento.css" />
+</head>
+
+<body>
+  <h1>BePlant - Gerenciamento</h1>
+
+  <!-- Abas de Navegação -->
+  <div class="abas-container">
+    <button class="aba-link active" onclick="mostrarAba('pessoa', event)">Gerenciar Pessoas</button>
+    <button class="aba-link" onclick="mostrarAba('produto', event)">Gerenciar Produtos</button>
+  </div>
+
+  <!-- Conteúdo das Abas -->
+  <div id="aba-pessoa" class="aba-conteudo active">
+    <iframe src="pessoa.html"></iframe>
+  </div>
+
+  <div id="aba-produto" class="aba-conteudo">
+    <iframe src="produto.html"></iframe>
+  </div>
+
+  <script src="gerenciamento.js"></script>
+</body>
+</html>
