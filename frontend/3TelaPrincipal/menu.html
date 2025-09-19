@@ -4,18 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BePlant - Sua Loja de Plantas 🌱</title>
-  <link rel="stylesheet" href="TPrincipal.css">
+  <link rel="stylesheet" href="menu.css">
 </head>
 <body>
   
+  <header class="header">
+  <div class="header-content">
+    
+    <!-- Botão Menu Hamburguer -->
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+    
+
 <!-- Cabeçalho Principal -->
-<header class="header">
   <div class="header-content">
     <!-- Nome do Site com Ícone -->
     <div class="logo">
       <span class="logo-icon">🌿</span>
       <span class="logo-text">BePlant</span>
     </div>
+
     
     <!-- Barra de Pesquisa -->
     <div class="search-container">
@@ -34,6 +41,15 @@
 </div>
 </header>
 
+<!-- Sidebar, as barrinhas ☰ -->
+<div id="sidebar" class="sidebar">
+  <a href="#" id="close-sidebar">&times;</a>
+  <ul>
+    <li><a href="../TelaGerenciamento/gerenciamentoPessoa/pessoa.html">Gerenciamento Pessoa</a></li>
+    <li><a href="../crudProduto/produto.html">Gerenciamento Produto</a></li>
+  </ul>
+</div>
+
 <!-- Menu de Categorias -->
 <nav class="categories">
   <div class="categories-content">
@@ -41,7 +57,8 @@
     <div class="category-items">
       <button class="category-btn active" data-category="todas">Todas</button>
       <button class="category-btn" data-category="plantas">Plantas</button>
-      <button class="category-btn" data-category="vasos">Vasos</button>
+      <button class="category-btn" data-category="vas
+      os">Vasos</button>
       <button class="category-btn" data-category="ferramentas">Ferramentas</button>
       <button class="category-btn" data-category="sementes">Sementes</button>
     </div>
@@ -69,7 +86,7 @@
   
 </main>
 
-<script src="TPrincipal.js"></script>
+<script src="menu.js"></script>
 <script>
   // Carregar carrinho.html dinamicamente
   fetch("carrinho.html")

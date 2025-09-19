@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'http://localhost:3001'; // ajuste para sua porta do backend
 let currentPessoaId = null;
 let operacao = null;
 
@@ -34,7 +34,7 @@ function mostrarMensagem(texto, tipo = 'info') {
 }
 
 function bloquearCampos(bloquearPrimeiro) {
-  const inputs = form.querySelectorAll('input');
+  const inputs = form.querySelectorAll('input, select');
   inputs.forEach((input, index) => {
     if (index === 0) input.disabled = bloquearPrimeiro;
     else input.disabled = !bloquearPrimeiro;
@@ -76,12 +76,13 @@ async function buscarPessoa() {
 }
 
 function preencherFormulario(pessoa) {
-  currentPessoaId = pessoa.idPessoa;
-  searchId.value = pessoa.idPessoa;
-  document.getElementById('nome').value = pessoa.nomePessoa || '';
-  document.getElementById('email').value = pessoa.emailPessoa || '';
-  document.getElementById('cpf').value = pessoa.cpfPessoa || '';
-  document.getElementById('senha').value = '';
+  currentPessoaId = pessoa.id_pessoa;
+  searchId.value = pessoa.id_pessoa;
+  document.getElementById('nome_pessoa').value = pessoa.nome_pessoa || '';
+  document.getElementById('email_pessoa').value = pessoa.email_pessoa || '';
+  document.getElementById('cpf_pessoa').value = pessoa.cpf_pessoa || '';
+  document.getElementById('senha_pessoa').value = ''; // senha não volta por segurança
+  document.getElementById('cargo_pessoa').value = pessoa.cargo_pessoa || '';
 }
 
 function incluirPessoa() {
@@ -91,7 +92,7 @@ function incluirPessoa() {
   searchId.value = currentPessoaId;
   bloquearCampos(true);
   mostrarBotoes(false, false, false, false, true, true);
-  document.getElementById('nome').focus();
+  document.getElementById('nome_pessoa').focus();
   operacao = 'incluir';
 }
 
@@ -99,7 +100,7 @@ function alterarPessoa() {
   mostrarMensagem('Digite os dados!', 'info');
   bloquearCampos(true);
   mostrarBotoes(false, false, false, false, true, true);
-  document.getElementById('nome').focus();
+  document.getElementById('nome_pessoa').focus();
   operacao = 'alterar';
 }
 
@@ -113,13 +114,13 @@ function excluirPessoa() {
 }
 
 async function salvarOperacao() {
-  const formData = new FormData(form);
   const pessoa = {
-    idPessoa: searchId.value,
-    nomePessoa: formData.get('nome'),
-    emailPessoa: formData.get('email'),
-    cpfPessoa: formData.get('cpf'),
-    senhaPessoa: formData.get('senha')
+    id_pessoa: searchId.value,
+    nome_pessoa: document.getElementById('nome_pessoa').value,
+    email_pessoa: document.getElementById('email_pessoa').value,
+    cpf_pessoa: document.getElementById('cpf_pessoa').value,
+    senha_pessoa: document.getElementById('senha_pessoa').value,
+    cargo_pessoa: document.getElementById('cargo_pessoa').value
   };
 
   let response = null;
@@ -181,10 +182,11 @@ function renderizarTabelaPessoas(pessoas) {
   pessoas.forEach(pessoa => {
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td><button class="btn-id" onclick="selecionarPessoa(${pessoa.idPessoa})">${pessoa.idPessoa}</button></td>
-      <td>${pessoa.nomePessoa}</td>
-      <td>${pessoa.emailPessoa}</td>
-      <td>${pessoa.cpfPessoa}</td>
+      <td><button class="btn-id" onclick="selecionarPessoa(${pessoa.id_pessoa})">${pessoa.id_pessoa}</button></td>
+      <td>${pessoa.nome_pessoa}</td>
+      <td>${pessoa.email_pessoa}</td>
+      <td>${pessoa.cpf_pessoa || ''}</td>
+      <td>${pessoa.cargo_pessoa || ''}</td>
     `;
     pessoasTableBody.appendChild(row);
   });

@@ -172,3 +172,25 @@ function adicionarAoCarrinho(id) {
   }
 }
 
+
+// Sidebar menu as tres barrinhas
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById("sidebar");
+  const menuToggle = document.getElementById("menu-toggle");
+  const closeSidebar = document.getElementById("close-sidebar");
+
+  menuToggle.addEventListener("click", () => {
+    sidebar.style.width = "250px"; // abre
+  });
+
+  closeSidebar.addEventListener("click", (e) => {
+    e.preventDefault();
+    sidebar.style.width = "0"; // fecha
+  });
+
+  window.addEventListener("click", (e) => {
+    if (e.target !== sidebar && e.target !== menuToggle && !sidebar.contains(e.target)) {
+      sidebar.style.width = "0";
+    }
+  });
+});

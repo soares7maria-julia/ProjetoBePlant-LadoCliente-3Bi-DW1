@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRUD - Pessoas</title>
-  <link rel="stylesheet" href="gerenciamento.css">
+  <link rel="stylesheet" href="pessoa.css">
 </head>
 
 <body>
@@ -31,29 +31,38 @@
           </div>
         </div>
 
-        <fieldset id="formFields">
-          <legend>Dados da Pessoa</legend>
+       <h2>Dados da Pessoa</h2>
 
           <div class="form-group">
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" required>
+            <label for="nome_pessoa">Nome:</label>
+            <input type="text" id="nome_pessoa" name="nome_pessoa" required>
           </div>
 
           <div class="form-group">
-            <label for="email">E-mail:</label>
-            <input type="email" id="email" name="email" required>
+            <label for="email_pessoa">E-mail:</label>
+            <input type="email" id="email_pessoa" name="email_pessoa" required>
           </div>
 
           <div class="form-group">
-            <label for="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf" required maxlength="11" pattern="[0-9]{11}">
+            <label for="cpf_pessoa">CPF:</label>
+            <input type="text" id="cpf_pessoa" name="cpf_pessoa" required maxlength="11" pattern="[0-9]{11}">
           </div>
 
           <div class="form-group">
-            <label for="senha">Senha:</label>
-            <input type="password" id="senha" name="senha" required>
+            <label for="senha_pessoa">Senha:</label>
+            <input type="password" id="senha_pessoa" name="senha_pessoa" required>
           </div>
-        </fieldset>
+
+          <div class="form-group cargo-group">
+  <label for="cargo_pessoa">Cargo:</label>
+  <select id="cargo_pessoa" name="cargo_pessoa" required>
+    <option value="">Selecione</option>
+    <option value="Administrador">Administrador</option>
+    <option value="Gerente">Gerente</option>
+    <option value="Funcionário">Funcionário</option>
+    <option value="Cliente">Cliente</option>
+  </select>
+      </div>
       </form>
     </section>
 
@@ -66,6 +75,7 @@
             <th>Nome</th>
             <th>Email</th>
             <th>CPF</th>
+            <th>Cargo</th> <!-- nova coluna -->
           </tr>
         </thead>
         <tbody id="pessoasTableBody"></tbody>

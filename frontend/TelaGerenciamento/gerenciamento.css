@@ -6,7 +6,7 @@ body {
 }
 
 h1 {
-  color: #075531;
+  color: #032c19;
   text-align: left;
   margin-bottom: 2rem;
 }
@@ -48,7 +48,7 @@ section {
 }
 
 .aba-link.active {
-  color: #34cfa1;
+  color: #28aa83;
   font-weight: 700;
   border-bottom: 3px solid #34cfa1;
 }
@@ -84,7 +84,7 @@ input[type="number"] {
   background-color: #1e2a28;
   border: 1px solid #405c57;
   border-radius: 5px;
-  color: #c8d6d5;
+  color: #3b5f5d;
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -165,10 +165,28 @@ tbody tr:hover {
     color: #34cfa1;
   }
 
+  select {
+  padding: 0.8rem 1rem;
+  background-color: #1e2a28;
+  border: 1px solid #405c57;
+  border-radius: 5px;
+  color: #3b5f5d;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+select:focus {
+  outline: none;
+  border-color: #34cfa1;
+  box-shadow: 0 0 0 3px rgba(52, 207, 161, 0.3);
+}
+
+
   #tabelaPessoas td:nth-of-type(1):before { content: "ID"; }
   #tabelaPessoas td:nth-of-type(2):before { content: "Nome"; }
   #tabelaPessoas td:nth-of-type(3):before { content: "Email"; }
   #tabelaPessoas td:nth-of-type(4):before { content: "CPF"; }
+  #tabelaPessoas td:nth-of-type(5):before { content: "Cargo"; }
   #tabelaPessoas td:nth-of-type(5):before { content: "Ações"; }
 
   #tabelaProdutos td:nth-of-type(1):before { content: "ID"; }
@@ -177,3 +195,9 @@ tbody tr:hover {
   #tabelaProdutos td:nth-of-type(4):before { content: "Valor"; }
   #tabelaProdutos td:nth-of-type(5):before { content: "Ações"; }
 }
+
+.btn-primary { background-color: #34cfa1; color: white; }
+.btn-secondary { background-color: #80cbb8; color: white; }
+.btn-danger { background-color: #c9184a; color: white; }
+.btn-save { background-color: #28aa83; color: white; }
+.btn-cancel { background-color: #999; color: white; }
