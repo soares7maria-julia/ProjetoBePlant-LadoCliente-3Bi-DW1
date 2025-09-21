@@ -1,67 +1,59 @@
-function carregarCarrinho() {
-  let carrinho = JSON.parse(getCookie('carrinho') || '[]');
-  let container = document.getElementById("carrinho-itens");
-  let total = 0;
-
-  if (!container) return;
-
-  if (carrinho.length === 0) {
-    container.innerHTML = '<p class="carrinho-vazio">O carrinho está vazio.</p>';
-  } else {
-    container.innerHTML = "";
-    carrinho.forEach((itemCarrinho, index) => {
-      const produto = produtos.find(p => p.id === itemCarrinho.id);
-      if (produto) {
-        const subtotal = produto.preco * itemCarrinho.quantidade;
-        total += subtotal;
-
-        const item = document.createElement("div");
-        item.classList.add("carrinho-item");
-        item.innerHTML = `
-          <img src="${produto.imagem}" alt="${produto.nome}" class="carrinho-img">
-          <span class="carrinho-nome">${produto.nome}</span>
-          <input type="number" min="1" value="${itemCarrinho.quantidade}" class="carrinho-quantidade" data-index="${index}">
-          <span>R$ ${subtotal.toFixed(2)}</span>
-          <button class="remover-item" data-index="${index}">✖</button>
-        `;
-        container.appendChild(item);
-      }
-    });
-
-    // Remover item
-    document.querySelectorAll(".remover-item").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        const idx = e.target.dataset.index;
-        carrinho.splice(idx, 1);
-        setCookie('carrinho', JSON.stringify(carrinho));
-        carregarCarrinho();
-      });
-    });
-
-    // Alterar quantidade
-    document.querySelectorAll(".carrinho-quantidade").forEach(input => {
-      input.addEventListener("change", (e) => {
-        const idx = e.target.dataset.index;
-        let qtd = parseInt(e.target.value);
-        if (qtd < 1) qtd = 1;
-        carrinho[idx].quantidade = qtd;
-        setCookie('carrinho', JSON.stringify(carrinho));
-        carregarCarrinho();
-      });
-    });
-  }
-
-  document.getElementById("carrinho-total").textContent = total.toFixed(2);
+// ===== Funções auxiliares de cookies =====
+function setCookie(name, value, days = 7) {
+  const date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = "expires=" + date.toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)};${expires};path=/`;
 }
 
-// Inicialização
-(function initCarrinho() {
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return decodeURIComponent(parts.pop().split(";").shift());
+  return null;
+}
+
+// ===== Carrinho =====
+// carrinho.js
+
+function carregarCarrinho() {
+  let carrinho = JSON.parse(getCookie("carrinho") || "[]");
+  const containerItens = document.getElementById("carrinho-itens");
+  const totalSpan = document.getElementById("carrinho-total");
+  containerItens.innerHTML = "";
+
+  if (carrinho.length === 0) {
+    containerItens.innerHTML = `<p class="carrinho-vazio">O carrinho está vazio.</p>`;
+    totalSpan.textContent = "0.00";
+    return;
+  }
+
+  let total = 0;
+  carrinho.forEach(item => {
+    total += item.preco * item.quantidade;
+    const div = document.createElement("div");
+    div.classList.add("carrinho-item");
+    div.innerHTML = `
+      <span>${item.nome} (x${item.quantidade})</span>
+      <span>R$ ${(item.preco * item.quantidade).toFixed(2)}</span>
+    `;
+    containerItens.appendChild(div);
+  });
+
+  totalSpan.textContent = total.toFixed(2);
+}
+
+// ===== Inicialização =====
+function inicializarCarrinho() {
   const btnCarrinho = document.getElementById("carrinho-btn");
   const modalCarrinho = document.getElementById("carrinho-modal");
   const fecharCarrinho = document.getElementById("fechar-carrinho");
-  const finalizarCompra = document.getElementById("finalizar-compra");
+  const finalizarBtn = document.getElementById("finalizar-compra");
 
-  if (!btnCarrinho || !modalCarrinho) return;
+  if (!btnCarrinho || !modalCarrinho) {
+    console.error("⚠️ Elementos do carrinho não encontrados!");
+    return;
+  }
 
   btnCarrinho.addEventListener("click", () => {
     modalCarrinho.style.display = "block";
@@ -72,9 +64,10 @@ function carregarCarrinho() {
     modalCarrinho.style.display = "none";
   });
 
-  finalizarCompra.addEventListener("click", () => {
-    alert("Compra finalizada!");
-    setCookie('carrinho', JSON.stringify([])); // limpa o carrinho
+  finalizarBtn.addEventListener("click", () => {
+    alert("Compra finalizada com sucesso!");
+    setCookie("carrinho", JSON.stringify([]));
     carregarCarrinho();
   });
-})();
+}
+

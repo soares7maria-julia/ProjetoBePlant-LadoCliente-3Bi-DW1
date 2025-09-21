@@ -8,23 +8,17 @@
 </head>
 <body>
   
-  <header class="header">
+<header class="header">
   <div class="header-content">
-    
     <!-- Botão Menu Hamburguer -->
     <div class="menu-toggle" id="menu-toggle">☰</div>
-    
 
-<!-- Cabeçalho Principal -->
-  <div class="header-content">
-    
     <!-- Nome do Site com Ícone -->
     <div class="logo">
       <span class="logo-icon">🌿</span>
       <span class="logo-text">BePlant</span>
     </div>
 
-    
     <!-- Barra de Pesquisa -->
     <div class="search-container">
       <input type="text" id="search-input" placeholder="Pesquisar plantas..." class="search-input">
@@ -36,10 +30,11 @@
       <button id="login-btn" class="login-btn">LOGIN</button>
       <span id="nickname" class="nickname" style="display:none;">NICKNAME</span>
       <button id="logout-btn" class="logout-btn" style="display:none;">Sair</button>
-   
-  <!-- Aqui o carrinho será carregado -->
-  <div id="carrinho-slot"></div>
-</div>
+
+      <!-- Aqui o carrinho será carregado -->
+      <div id="carrinho-slot"></div>
+    </div>
+  </div>
 </header>
 
 <!-- Sidebar, as barrinhas ☰ -->
@@ -55,41 +50,38 @@
   <!-- Botões serão carregados via JS -->
 </div>
 
-
 <!-- Conteúdo Principal -->
 <main class="main-content">
-  
-  <!-- Seção: Algumas Coisas -->
   <section class="product-section">
     <h2 class="section-title">ALGUMAS COISAS</h2>
-    <div id="algumas-coisas" class="products-grid">
-      <!-- Produtos serão carregados via JS -->
-    </div>
+    <div id="algumas-coisas" class="products-grid"></div>
   </section>
   
-  <!-- Seção: Outras Coisas -->
   <section class="product-section">
     <h2 class="section-title">OUTRAS COISAS</h2>
-    <div id="outras-coisas" class="products-grid">
-      <!-- Produtos serão carregados via JS -->
-    </div>
+    <div id="outras-coisas" class="products-grid"></div>
   </section>
-  
 </main>
 
-<script src="menu.js"></script>
+<!-- Carregar Carrinho -->
 <script>
-  // Carregar carrinho.html dinamicamente
   fetch("carrinho.html")
     .then(res => res.text())
     .then(html => {
       document.getElementById("carrinho-slot").innerHTML = html;
-      // depois que o HTML do carrinho é injetado, carrega o JS dele
-      let script = document.createElement("script");
+      // depois que o HTML é carregado, ativamos o JS do carrinho
+      const script = document.createElement("script");
       script.src = "carrinho.js";
+      script.onload = () => {
+        if (typeof inicializarCarrinho === "function") {
+          inicializarCarrinho(); // 🚀 inicia os eventos do carrinho
+        }
+      };
       document.body.appendChild(script);
     });
 </script>
+
+
+<script src="menu.js"></script>
 </body>
 </html>
-

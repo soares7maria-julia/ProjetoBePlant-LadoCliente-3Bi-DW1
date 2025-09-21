@@ -6,8 +6,8 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte da tela de login */
-  background-color: #e0f2f1; /* Cor de fundo da tela de login */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e0f2f1;
   color: #333;
   line-height: 1.6;
 }
@@ -15,7 +15,7 @@ body {
 /* Cabeçalho Principal */
 .header {
   position: relative;
-  background: linear-gradient(135deg, #34cfa1, #80cbb8); /* Gradiente da tela de login */
+  background: linear-gradient(135deg, #34cfa1, #80cbb8);
   color: white;
   padding: 1rem 0;
   box-shadow: 0 5px 15px rgba(0,0,0,0.15);
@@ -34,9 +34,8 @@ body {
 /* Botão Menu Hamburguer */
 .menu-toggle {
   position: absolute;
-  top: 50%;
+  top: 4%;
   left: 30px;
-  transform: translateY(45%);
   font-size: 1.7rem;
   cursor: pointer;
   color: white;
@@ -79,18 +78,13 @@ body {
   color: white;
 }
 
-
-/* Logo - Nome do site no canto esquerdo */
+/* Logo */
 .logo {
   display: flex;
   align-items: center;
   gap: 0.3rem;
   font-size: 1.8rem;
   font-weight: bold;
-}
-
-.logo-icon {
-  font-size: 2rem;
 }
 
 .logo-text {
@@ -106,7 +100,7 @@ body {
   border-radius: 25px;
   overflow: hidden;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  border: 2px solid #b2dfdb; /* Borda da tela de login */
+  border: 2px solid #b2dfdb;
 }
 
 .search-input {
@@ -118,7 +112,7 @@ body {
 }
 
 .search-btn {
-  background-color: #4ecec1; /* Cor do botão da tela de login */
+  background-color: #4ecec1;
   color: white;
   border: none;
   padding: 0.75rem 1rem;
@@ -127,7 +121,7 @@ body {
 }
 
 .search-btn:hover {
-  background-color: #26a69a; /* Cor de hover da tela de login */
+  background-color: #26a69a;
 }
 
 /* Área de Login */
@@ -150,7 +144,7 @@ body {
 
 .login-btn:hover, .logout-btn:hover {
   background-color: white;
-  color: #4db6ac; /* Cor de hover da tela de login */
+  color: #4db6ac;
 }
 
 .nickname {
@@ -174,69 +168,6 @@ body {
   background-color: white;
   color: #4db6ac;
 }
-
-/* Modal lateral */
-.carrinho-modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 320px;
-  height: 100%;
-  background: #ccf5ef;
-  box-shadow: -2px 0 10px rgba(0,0,0,0.3);
-  padding: 1rem;
-  z-index: 1000;
-  overflow-y: auto;
-}
-
-.carrinho-header, .carrinho-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.carrinho-item {
-  color: #0a443f;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.7rem;
-}
-
-.fechar-btn {
-  background: transparent;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-}
-
-.finalizar-btn {
-  background: #4ecec1;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 18px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.finalizar-btn:hover {
-  background: #26a69a;
-}
-.carrinho-title {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #075531; /* mesma cor dos títulos */
-}
-
-.carrinho-vazio {
-  text-align: center;
-  color: #368d73;
-  font-style: italic;
-  margin-top: 1rem;
-}
-
 
 /* Menu de Categorias */
 .categories {
@@ -262,8 +193,8 @@ body {
 
 .category-btn {
   background-color: transparent;
-  border: 1px solid #4db6ac; /* Cor da borda da tela de login */
-  color: #4db6ac; /* Cor do texto da tela de login */
+  border: 1px solid #4db6ac;
+  color: #4db6ac;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   cursor: pointer;
@@ -273,7 +204,7 @@ body {
 
 .category-btn:hover,
 .category-btn.active {
-  background: linear-gradient(135deg, #4db6ac, #80cbc4); /* Gradiente da tela de login */
+  background: linear-gradient(135deg, #4db6ac, #80cbc4);
   color: white;
 }
 
@@ -291,7 +222,7 @@ body {
 .section-title {
   font-size: 1.3rem;
   font-weight: bold;
-  color: #075531; /* Cor de título da tela de login */
+  color: #075531;
   margin-bottom: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -330,19 +261,19 @@ body {
 .produto-card h3 {
   font-size: 1.1rem;
   margin: 0.5rem 0;
-  color: #075531; /* Cor de título da tela de login */
+  color: #075531;
   font-weight: 600;
 }
 
 .produto-card .preco {
   font-weight: bold;
-  color: #1e7e61; /* Cor da tela de login */
+  color: #1e7e61;
   font-size: 1.0rem;
   margin: 0.5rem 0 1rem;
 }
 
 .produto-card button {
-  background: linear-gradient(135deg, #34cfa1, #80cbc1); /* Gradiente da tela de login */
+  background: linear-gradient(135deg, #34cfa1, #80cbc1);
   color: white;
   border: none;
   padding: 0.50rem 1.0rem;
@@ -354,7 +285,7 @@ body {
 }
 
 .produto-card button:hover {
-  background: linear-gradient(110deg, #34cfa1, #59bba6); /* Gradiente de hover da tela de login */
+  background: linear-gradient(110deg, #34cfa1, #59bba6);
   transform: scale(1.05);
 }
 
@@ -365,38 +296,27 @@ body {
     gap: 1rem;
     padding: 0 1rem;
   }
-  
+
   .search-container {
     max-width: 100%;
   }
-  
+
   .categories-content {
     flex-direction: column;
     gap: 1rem;
     padding: 0 1rem;
   }
-  
+
   .category-items {
     justify-content: center;
   }
-  
+
   .main-content {
     padding: 1rem;
   }
-  
+
   .products-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 1rem;
   }
-}
-
-/* Botão Menu Hamburguer */
-.menu-toggle {
-  position: absolute;
-  top: 4%;
-  left: 30px;
-  font-size: 1.7rem;
-  cursor: pointer;
-  color: white;
-  margin-right: 1rem;
 }

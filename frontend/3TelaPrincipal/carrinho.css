@@ -1,0 +1,144 @@
+/* Modal lateral */
+.carrinho-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 320px;
+  height: 100%;
+  background: #ccf5ef;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+  padding: 1rem;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.carrinho-header, .carrinho-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.carrinho-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #075531;
+}
+
+.carrinho-vazio {
+  text-align: center;
+  color: #368d73;
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+.carrinho-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid rgb(171, 206, 206);
+  background: #52bbaf;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.carrinho-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-right: 12px;
+}
+
+.carrinho-item .info {
+  
+  flex: 1;
+  padding: 0 10px;
+}
+
+.carrinho-item h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.carrinho-item p {
+  margin: 4px 0;
+  color: #555;
+}
+
+.quantidade {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+}
+
+.quantidade button {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: #4a7c59;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.quantidade button:hover {
+  background: #3b6447;
+}
+
+.quantidade span {
+  min-width: 24px;
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+}
+
+.remover-btn {
+  background: #e74c3c;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.remover-btn:hover {
+  background: #c0392b;
+}
+
+#total-carrinho {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: right;
+  color: #333;
+}
+
+.fechar-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.finalizar-btn {
+  background: #377c76;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.finalizar-btn:hover {
+  background: #26a69a;
+}
