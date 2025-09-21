@@ -48,8 +48,16 @@
 </div>
 
 <div class="form-group">
-  <label for="descricao">Descrição:</label>
-  <input type="text" id="descricao" name="descricao" required>
+  <label for="imagem">Imagem (URL):</label>
+  <input type="text" id="imagem" name="imagem" required>
+</div>
+
+<div class="form-group cargo-group">
+  <label for="categoria">Categoria</label>
+  <select id="categoria" name="categoria" required>
+    <option value="" disabled selected> selecione uma categoria </option>
+    <!-- opções serão carregadas via JS -->
+  </select>
 </div>
       </form>
     </section>
@@ -57,15 +65,16 @@
     <section class="list-section">
       <h2>Produtos Cadastrados</h2>
       <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Estoque</th>
-            <th>Valor</th>
-            <th>Descrição</th>
-          </tr>
-        </thead>
+      <thead>
+   <tr>
+    <th>ID</th>
+    <th>Nome</th>
+    <th>Estoque</th>
+    <th>Valor</th>
+    <th>Imagem</th>
+    <th>Categoria</th>
+  </tr>
+</thead>
         <tbody id="produtosTableBody"></tbody>
       </table>
     </section>

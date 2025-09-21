@@ -1,21 +1,21 @@
 // Dados dos produtos expandidos
 const produtos = [
   // Algumas Coisas
-  { id: 1, nome: "Samambaia", preco: 25.00, imagem: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=200&fit=crop", categoria: "plantas", secao: "algumas" },
-  { id: 2, nome: "Cacto Pequeno", preco: 15.00, imagem: "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=300&h=200&fit=crop", categoria: "plantas", secao: "algumas" },
-  { id: 3, nome: "Orquídea Branca", preco: 45.00, imagem: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop", categoria: "plantas", secao: "algumas" },
-  { id: 4, nome: "Vaso Cerâmica", preco: 35.00, imagem: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=300&h=200&fit=crop", categoria: "vasos", secao: "algumas" },
-  { id: 5, nome: "Suculenta Mix", preco: 20.00, imagem: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=200&fit=crop", categoria: "plantas", secao: "algumas" },
-  { id: 6, nome: "Regador Verde", preco: 28.00, imagem: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=200&fit=crop", categoria: "ferramentas", secao: "algumas" },
-  { id: 7, nome: "Fertilizante", preco: 18.00, imagem: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=200&fit=crop", categoria: "ferramentas", secao: "algumas" },
+  { id: 1, nome: "Samambaia", preco: 25.00, imagem: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=200&fit=crop", categoria: "Plantas Ornamentais", secao: "algumas" },
+  { id: 2, nome: "Cacto Pequeno", preco: 15.00, imagem: "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=300&h=200&fit=crop", categoria: "Plantas Ornamentais", secao: "algumas" },
+  { id: 3, nome: "Orquídea Branca", preco: 45.00, imagem: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop", categoria: "Plantas Ornamentais", secao: "algumas" },
+  { id: 4, nome: "Vaso Cerâmica", preco: 35.00, imagem: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=300&h=200&fit=crop", categoria: "Plantas Ornamentais", secao: "algumas" },
+  { id: 5, nome: "Suculenta Mix", preco: 20.00, imagem: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=200&fit=crop", categoria: "Plantas Ornamentais", secao: "algumas" },
+  { id: 6, nome: "Regador Verde", preco: 28.00, imagem: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=200&fit=crop", categoria: "Plantas Ornamentais", secao: "algumas" },
+  { id: 7, nome: "Fertilizante", preco: 18.00, imagem: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=200&fit=crop", categoria: "Plantas Ornamentais", secao: "algumas" },
   
   // Outras Coisas
-  { id: 8, nome: "Monstera Deliciosa", preco: 65.00, imagem: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop", categoria: "plantas", secao: "outras" },
-  { id: 9, nome: "Vaso Suspenso", preco: 42.00, imagem: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=300&h=200&fit=crop", categoria: "vasos", secao: "outras" },
-  { id: 10, nome: "Kit Sementes", preco: 12.00, imagem: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=200&fit=crop", categoria: "sementes", secao: "outras" },
-  { id: 11, nome: "Pá de Jardim", preco: 22.00, imagem: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=200&fit=crop", categoria: "ferramentas", secao: "outras" },
-  { id: 12, nome: "Violeta Africana", preco: 30.00, imagem: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop", categoria: "plantas", secao: "outras" },
-  { id: 13, nome: "Vaso Decorativo", preco: 55.00, imagem: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=300&h=200&fit=crop", categoria: "vasos", secao: "outras" }
+  { id: 8, nome: "Monstera Deliciosa", preco: 65.00, imagem: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop", categoria: "Plantas Ornamentais", secao: "outras" },
+  { id: 9, nome: "Vaso Suspenso", preco: 42.00, imagem: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=300&h=200&fit=crop", categoria: "Plantas Ornamentais", secao: "outras" },
+  { id: 10, nome: "Kit Sementes", preco: 12.00, imagem: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=200&fit=crop", categoria: "Plantas Ornamentais", secao: "outras" },
+  { id: 11, nome: "Pá de Jardim", preco: 22.00, imagem: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=200&fit=crop", categoria: "Plantas Ornamentais", secao: "outras" },
+  { id: 12, nome: "Violeta Africana", preco: 30.00, imagem: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop", categoria: "Plantas Ornamentais", secao: "outras" },
+  { id: 13, nome: "Vaso Decorativo", preco: 55.00, imagem: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=300&h=200&fit=crop", categoria: "Plantas Ornamentais", secao: "outras" }
 ];
 
 // Estado da aplicação
@@ -41,10 +41,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function inicializarApp() {
-  carregarProdutos();
-  configurarEventos();
-  verificarLogin();
+  carregarCategorias().then(() => {
+    carregarProdutos();  // já usa as categorias
+    verificarLogin();
+  });
 }
+
 
 // Carregar produtos nas seções
 function carregarProdutos() {
@@ -194,3 +196,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+async function carregarCategorias() {
+  try {
+    const res = await fetch("http://localhost:3001/categoria"); // ajuste a porta se precisar
+    const categorias = await res.json();
+    const container = document.querySelector(".category-items");
+
+    // sempre começa com "Todas"
+    container.innerHTML = `<button class="category-btn active" data-category="todas">Todas</button>`;
+
+    categorias.forEach(cat => {
+      const btn = document.createElement("button");
+      btn.classList.add("category-btn");
+      btn.dataset.category = cat.nomecategoria.toLowerCase();
+      btn.textContent = cat.nomecategoria;
+      container.appendChild(btn);
+    });
+
+    configurarEventos(); // reativa eventos de clique
+  } catch (err) {
+    console.error("Erro ao carregar categorias:", err);
+  }
+}
+

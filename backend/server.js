@@ -19,6 +19,9 @@ const caminhoFrontend = path.join(__dirname, '../frontend');
 console.log('Caminho frontend:', caminhoFrontend);
 
 app.use(express.static(caminhoFrontend));
+// Servir a pasta "images" para acesso público
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 app.use(cookieParser());
 
 // Middleware para permitir CORS (Cross-Origin Resource Sharing)
@@ -88,13 +91,13 @@ app.use('/avaliador', avaliadorRoutes);
 
 const avaliadoRoutes = require('./routes/avaliadoRoutes');
 app.use('/avaliado', avaliadoRoutes);
-
-const avaliacaoRoutes = require('./routes/avaliacaoRoutes');
-app.use('/avaliacao', avaliacaoRoutes);
-
-const avaliacaoHasCargoRoutes = require('./routes/avaliacaoHasCargoRoutes');
-app.use('/avaliacaoHasCargo', avaliacaoHasCargoRoutes);
 */
+const categoriaRoutes = require('./routes/categoriaRoutes');
+app.use('/categoria', categoriaRoutes);
+
+const produtoRoutes = require('./routes/produtoRoutes');
+app.use('/produto', produtoRoutes);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Rota padrão
@@ -119,6 +122,7 @@ app.use((err, req, res, next) => {
     timestamp: new Date().toISOString()
   });
 });
+
 
 // Middleware para rotas não encontradas (404)
 app.use('', (req, res) => {

@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'http://localhost:3001';
 let currentProdutoId = null;
 let operacao = null;
 
@@ -12,10 +12,12 @@ const btnCancelar = document.getElementById('btnCancelar');
 const btnSalvar = document.getElementById('btnSalvar');
 const produtosTableBody = document.getElementById('produtosTableBody');
 const messageContainer = document.getElementById('messageContainer');
+const selectCategoria = document.getElementById('categoria');
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
   carregarProdutos();
+  carregarCategorias();
 });
 
 btnBuscar.addEventListener('click', buscarProduto);
@@ -30,11 +32,11 @@ bloquearCampos(false);
 
 function mostrarMensagem(texto, tipo = 'info') {
   messageContainer.innerHTML = `<div class="message ${tipo}">${texto}</div>`;
-  setTimeout(() => { messageContainer.innerHTML = ''; }, 3000);
+  setTimeout(() => { messageContainer.innerHTML = ''; }, 3001);
 }
 
 function bloquearCampos(bloquearPrimeiro) {
-  const inputs = form.querySelectorAll('input, textarea');
+  const inputs = form.querySelectorAll('input, textarea, select');
   inputs.forEach((input, index) => {
     if (index === 0) input.disabled = bloquearPrimeiro;
     else input.disabled = !bloquearPrimeiro;
@@ -51,6 +53,30 @@ function mostrarBotoes(btBuscar, btIncluir, btAlterar, btExcluir, btSalvar, btCa
   btnSalvar.style.display = btSalvar ? 'inline-block' : 'none';
   btnCancelar.style.display = btCancelar ? 'inline-block' : 'none';
 }
+
+async function carregarCategorias() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/categoria`);
+    if (response.ok) {
+      const categorias = await response.json();
+       console.log("Categorias recebidas:", categorias); // <---- teste
+
+      // Limpa e adiciona a opção padrão
+      selectCategoria.innerHTML = '<option value="" disabled selected> selecione uma categoria </option>';
+
+      // Adiciona todas as categorias vindas do backend
+      categorias.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat.idcategoria;
+        option.textContent = cat.nomecategoria;
+        selectCategoria.appendChild(option);
+      });
+    }
+  } catch (err) {
+    mostrarMensagem('Erro ao carregar categorias', 'error');
+  }
+}
+
 
 async function buscarProduto() {
   const id = searchId.value.trim();
@@ -76,13 +102,16 @@ async function buscarProduto() {
 }
 
 function preencherFormulario(produto) {
-  currentProdutoId = produto.idItem;
-  searchId.value = produto.idItem;
-  document.getElementById('nome').value = produto.nomeItem || '';
-  document.getElementById('estoque').value = produto.estoqueItem || '';
-  document.getElementById('valor').value = produto.valorUnitario || '';
-  document.getElementById('descricao').value = produto.descricaoItem || '';
-
+  currentProdutoId = produto.iditem;
+searchId.value = produto.iditem;
+document.getElementById('nome').value = produto.nomeitem || '';
+document.getElementById('estoque').value = produto.estoqueitem || '';
+document.getElementById('valor').value = produto.valorunitario || '';
+document.getElementById('imagem').value = produto.imagemitem || '';
+selectCategoria.value = produto.idcategoria || '';
+  if (produto.idcategoria) {
+    selectCategoria.value = produto.idcategoria;
+  }
 }
 
 function incluirProduto() {
@@ -119,8 +148,9 @@ async function salvarOperacao() {
   idItem: searchId.value,
   nomeItem: formData.get('nome'),
   estoqueItem: parseInt(formData.get('estoque')) || 0,
-valorUnitario: parseFloat(formData.get('valor')) || 0.0,
-  descricaoItem: formData.get('descricao')
+  valorUnitario: parseFloat(formData.get('valor')) || 0.0,
+  imagemItem: formData.get('imagem'),
+  idcategoria: parseInt(formData.get('categoria'))
 };
 
 
@@ -182,12 +212,14 @@ function renderizarTabelaProdutos(produtos) {
   produtosTableBody.innerHTML = '';
   produtos.forEach(produto => {
     const row = document.createElement('tr');
-    row.innerHTML = `
-  <td><button class="btn-id" onclick="selecionarProduto(${produto.idItem})">${produto.idItem}</button></td>
-  <td>${produto.nomeItem}</td>
-  <td>${produto.estoqueItem}</td>
-  <td>${produto.valorUnitario}</td>
-  <td>${produto.descricaoItem || ''}</td>
+   row.innerHTML = `
+  <td><button class="btn-id" onclick="selecionarProduto(${produto.iditem})">${produto.iditem}</button></td>
+  <td>${produto.nomeitem}</td>
+  <td>${produto.estoqueitem}</td>
+  <td>${produto.valorunitario}</td>
+<td><img src="http://localhost:3001/images/${produto.imagemitem || ''}" 
+         alt="Imagem" style="max-width:80px; border-radius:6px;"></td>
+  <td>${produto.nomecategoria || ''}</td>
 `;
     produtosTableBody.appendChild(row);
   });
