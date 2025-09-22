@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   carregarPessoas();
 
   const chkFuncionario = document.getElementById('chkFuncionario');
-  const cargoSelect = document.getElementById('cargo_pessoa');
+  const cargoSelect = document.getElementById('cargopessoa');
     carregarCargos(); // <<< adiciona esta linha
 
 
@@ -39,7 +39,7 @@ async function carregarCargos() {
     const response = await fetch(`${API_BASE_URL}/cargo`);
     if (response.ok) {
       const cargos = await response.json();
-      const cargoSelect = document.getElementById('cargo_pessoa');
+      const cargoSelect = document.getElementById('cargopessoa');
       cargoSelect.innerHTML = '<option value="">Selecione um cargo</option>';
 
       cargos.forEach(cargo => {
@@ -122,20 +122,20 @@ async function buscarPessoa() {
 }
 
 function preencherFormulario(pessoa) {
-  currentPessoaId = pessoa.id_pessoa;
-  searchId.value = pessoa.id_pessoa;
-  document.getElementById('nome_pessoa').value = pessoa.nome_pessoa || '';
-  document.getElementById('email_pessoa').value = pessoa.email_pessoa || '';
-  document.getElementById('cpf_pessoa').value = pessoa.cpf_pessoa || '';
-  document.getElementById('senha_pessoa').value = ''; // senha não volta por segurança
+  currentPessoaId = pessoa.idpessoa;
+  searchId.value = pessoa.idpessoa;
+  document.getElementById('nomepessoa').value = pessoa.nomepessoa || '';
+  document.getElementById('emailpessoa').value = pessoa.emailpessoa || '';
+  document.getElementById('cpfpessoa').value = pessoa.cpfpessoa || '';
+  document.getElementById('senhapessoa').value = ''; // senha não volta por segurança
 
   const chkFuncionario = document.getElementById('chkFuncionario');
-  const cargoSelect = document.getElementById('cargo_pessoa');
+  const cargoSelect = document.getElementById('cargopessoa');
 
-  if (pessoa.cargo_pessoa) {
+  if (pessoa.cargopessoa) {
     chkFuncionario.checked = true;
     cargoSelect.disabled = false;
-    cargoSelect.value = pessoa.cargo_pessoa;
+    cargoSelect.value = pessoa.cargopessoa;
   } else {
     chkFuncionario.checked = false;
     cargoSelect.disabled = true;
@@ -150,7 +150,7 @@ function incluirPessoa() {
   searchId.value = currentPessoaId;
   bloquearCampos(true);
   mostrarBotoes(false, false, false, false, true, true);
-  document.getElementById('nome_pessoa').focus();
+  document.getElementById('nomepessoa').focus();
   operacao = 'incluir';
 }
 
@@ -158,7 +158,7 @@ function alterarPessoa() {
   mostrarMensagem('Digite os dados!', 'info');
   bloquearCampos(true);
   mostrarBotoes(false, false, false, false, true, true);
-  document.getElementById('nome_pessoa').focus();
+  document.getElementById('nomepessoa').focus();
   operacao = 'alterar';
 }
 
@@ -173,13 +173,13 @@ function excluirPessoa() {
 
 async function salvarOperacao() {
   const pessoa = {
-    id_pessoa: searchId.value,
-    nome_pessoa: document.getElementById('nome_pessoa').value,
-    email_pessoa: document.getElementById('email_pessoa').value,
-    cpf_pessoa: document.getElementById('cpf_pessoa').value,
-    senha_pessoa: document.getElementById('senha_pessoa').value,
-    cargo_pessoa: document.getElementById('chkFuncionario').checked
-      ? document.getElementById('cargo_pessoa').value
+    idpessoa: searchId.value,
+    nomepessoa: document.getElementById('nomepessoa').value,
+    emailpessoa: document.getElementById('emailpessoa').value,
+    cpfpessoa: document.getElementById('cpfpessoa').value,
+    senhapessoa: document.getElementById('senhapessoa').value,
+    cargopessoa: document.getElementById('chkFuncionario').checked
+      ? document.getElementById('cargopessoa').value
       : ""
   };
 
@@ -242,11 +242,11 @@ function renderizarTabelaPessoas(pessoas) {
   pessoas.forEach(pessoa => {
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td><button class="btn-id" onclick="selecionarPessoa(${pessoa.id_pessoa})">${pessoa.id_pessoa}</button></td>
-      <td>${pessoa.nome_pessoa}</td>
-      <td>${pessoa.email_pessoa}</td>
-      <td>${pessoa.cpf_pessoa || ''}</td>
-      <td>${pessoa.cargo_pessoa || ''}</td>
+      <td><button class="btn-id" onclick="selecionarPessoa(${pessoa.idpessoa})">${pessoa.idpessoa}</button></td>
+      <td>${pessoa.nomepessoa}</td>
+      <td>${pessoa.emailpessoa}</td>
+      <td>${pessoa.cpfpessoa || ''}</td>
+      <td>${pessoa.cargopessoa || ''}</td>
     `;
     pessoasTableBody.appendChild(row);
   });
