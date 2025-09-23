@@ -76,7 +76,7 @@ cadastroForm.addEventListener("submit", function(e) {
         submitButton.classList.add("loading");
         submitButton.disabled = true;
 
-        fetch("http://localhost:3000/cadastrar", {
+        fetch("http://localhost:3001/cadastrar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

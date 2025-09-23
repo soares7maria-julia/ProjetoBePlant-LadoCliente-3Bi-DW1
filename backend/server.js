@@ -82,10 +82,10 @@ app.use('/pessoa', pessoaRoutes);
 
 const cargoRoutes = require('./routes/cargoRoutes');
 app.use('/cargo', cargoRoutes);
-/*
-const professorRoutes = require('./routes/professorRoutes');
-app.use('/professor', professorRoutes);
 
+const loginRoutes = require('./routes/loginRoutes');
+app.use('/login', loginRoutes);
+/*
 const avaliadorRoutes = require('./routes/avaliadorRoutes');
 app.use('/avaliador', avaliadorRoutes);
 

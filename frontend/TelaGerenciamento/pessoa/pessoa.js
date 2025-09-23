@@ -61,7 +61,7 @@ btnExcluir.addEventListener('click', excluirPessoa);
 btnCancelar.addEventListener('click', cancelarOperacao);
 btnSalvar.addEventListener('click', salvarOperacao);
 
-mostrarBotoes(true, false, false, false, false, true);
+mostrarBotoes(true, false, false, false, true, true);
 bloquearCampos(false);
 
 function mostrarMensagem(texto, tipo = 'info') {
@@ -127,19 +127,20 @@ function preencherFormulario(pessoa) {
   document.getElementById('nomepessoa').value = pessoa.nomepessoa || '';
   document.getElementById('emailpessoa').value = pessoa.emailpessoa || '';
   document.getElementById('cpfpessoa').value = pessoa.cpfpessoa || '';
-  document.getElementById('senhapessoa').value = ''; // senha não volta por segurança
+  document.getElementById('senhapessoa').value = ''; 
+  document.getElementById('enderecopessoa').value = pessoa.enderecopessoa || '';
 
   const chkFuncionario = document.getElementById('chkFuncionario');
   const cargoSelect = document.getElementById('cargopessoa');
 
-  if (pessoa.cargopessoa) {
-    chkFuncionario.checked = true;
-    cargoSelect.disabled = false;
-    cargoSelect.value = pessoa.cargopessoa;
-  } else {
-    chkFuncionario.checked = false;
-    cargoSelect.disabled = true;
-    cargoSelect.value = "";
+  if (pessoa.cargo && pessoa.cargo !== 'Cliente') {
+  chkFuncionario.checked = true;
+  cargoSelect.disabled = false;
+  // aqui você teria que mapear cargo -> idcargo se precisar
+} else {
+  chkFuncionario.checked = false;
+  cargoSelect.disabled = true;
+  cargoSelect.value = "";
   }
 }
 
@@ -170,29 +171,32 @@ function excluirPessoa() {
   mostrarBotoes(false, false, false, false, true, true);
   operacao = 'excluir';
 }
-
 async function salvarOperacao() {
   const pessoa = {
     idpessoa: searchId.value,
     nomepessoa: document.getElementById('nomepessoa').value,
     emailpessoa: document.getElementById('emailpessoa').value,
-    cpfpessoa: document.getElementById('cpfpessoa').value,
     senhapessoa: document.getElementById('senhapessoa').value,
-    cargopessoa: document.getElementById('chkFuncionario').checked
+    cpfpessoa: document.getElementById('cpfpessoa').value,
+    enderecopessoa: document.getElementById('enderecopessoa').value,
+    isFuncionario: document.getElementById('chkFuncionario').checked,
+    fkcargo: document.getElementById('chkFuncionario').checked
       ? document.getElementById('cargopessoa').value
-      : ""
+      : null
   };
 
   let response = null;
   try {
     if (operacao === 'incluir') {
       response = await fetch(`${API_BASE_URL}/pessoa`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(pessoa)
       });
     } else if (operacao === 'alterar') {
       response = await fetch(`${API_BASE_URL}/pessoa/${currentPessoaId}`, {
-        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(pessoa)
       });
     } else if (operacao === 'excluir') {
@@ -246,7 +250,8 @@ function renderizarTabelaPessoas(pessoas) {
       <td>${pessoa.nomepessoa}</td>
       <td>${pessoa.emailpessoa}</td>
       <td>${pessoa.cpfpessoa || ''}</td>
-      <td>${pessoa.cargopessoa || ''}</td>
+      <td>${pessoa.enderecopessoa || ''}</td> <!-- agora mostra o endereço -->
+      <td>${pessoa.cargo || 'Cliente'}</td>   <!-- agora mostra o cargo -->
     `;
     pessoasTableBody.appendChild(row);
   });
