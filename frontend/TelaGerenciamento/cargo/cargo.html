@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD - Cargos</title>
+  <link rel="stylesheet" href="cargo.css">
+</head>
+
+<body>
+  <header>
+    <h1>CRUD Cargos</h1>
+  </header>
+
+  <main>
+    <section class="form-section">
+      <h2>Cadastro de Cargo</h2>
+      <form id="cargoForm">
+        <div class="search-container">
+          <label for="searchIdCargo">Buscar por ID:</label>
+          <div class="search-input-group">
+            <input type="number" id="searchIdCargo" placeholder="Digite o ID para buscar">
+
+            <button type="button" id="btnBuscarCargo">🔍 Buscar</button>
+            <button type="button" id="btnIncluirCargo" class="btn-primary">Incluir</button>
+            <button type="button" id="btnAlterarCargo" class="btn-secondary" style="display: none;">Alterar</button>
+            <button type="button" id="btnExcluirCargo" class="btn-danger" style="display: none;">Excluir</button>
+            <button type="button" id="btnSalvarCargo" class="btn-save" style="display: none;">Salvar</button>
+            <button type="button" id="btnCancelarCargo" class="btn-cancel">Cancelar</button>
+          </div>
+        </div>
+
+        <h2>Dados do Cargo</h2>
+        <div class="form-group">
+          <label for="nomecargo">Nome do Cargo:</label>
+          <input type="text" id="nomecargo" name="nomecargo" required>
+        </div>
+      </form>
+    </section>
+
+    <section class="list-section">
+      <h2>Cargos Cadastrados</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome do Cargo</th>
+          </tr>
+        </thead>
+        <tbody id="cargosTableBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <div id="messageContainerCargo" class="message-container"></div>
+
+  <script src="cargo.js" defer></script>
+</body>
+</html>

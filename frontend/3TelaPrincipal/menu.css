@@ -52,7 +52,7 @@ body {
   background-color: #26a69a;
   box-shadow: -2px 0 10px rgba(0,0,0,0.6);
   overflow-x: hidden;
-  transition: 0.3s;
+  transition: 0.2s;
   padding-top: 60px;
   z-index: 1100;
 }
@@ -60,7 +60,7 @@ body {
 .sidebar a {
   padding: 10px 20px;
   text-decoration: none;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: rgb(0, 0, 0);
   display: block;
 }

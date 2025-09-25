@@ -85,13 +85,13 @@ app.use('/cargo', cargoRoutes);
 
 const loginRoutes = require('./routes/loginRoutes');
 app.use('/login', loginRoutes);
-/*
-const avaliadorRoutes = require('./routes/avaliadorRoutes');
-app.use('/avaliador', avaliadorRoutes);
 
-const avaliadoRoutes = require('./routes/avaliadoRoutes');
-app.use('/avaliado', avaliadoRoutes);
-*/
+const funcionarioRoutes = require('./routes/funcionarioRoutes');
+app.use('/funcionario', funcionarioRoutes);
+
+const clienteRoutes = require('./routes/clienteRoutes');
+app.use('/cliente', clienteRoutes);
+
 const categoriaRoutes = require('./routes/categoriaRoutes');
 app.use('/categoria', categoriaRoutes);
 

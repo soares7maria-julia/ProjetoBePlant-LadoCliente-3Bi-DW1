@@ -23,7 +23,7 @@ exports.cadastrar = async (req, res) => {
       `INSERT INTO pessoa (cpfpessoa, nomepessoa, emailpessoa, senhapessoa, enderecopessoa)
        VALUES ($1, $2, $3, $4, $5)
        RETURNING idpessoa, nomepessoa, emailpessoa, cpfpessoa, enderecopessoa`,
-      [cpf, nome, email, senha, endereco]   // ⚠️ ideal: criptografar senha com bcrypt
+      [cpf, nome, email, senha, endereco]
     );
 
     const pessoa = result.rows[0];
@@ -45,4 +45,37 @@ exports.cadastrar = async (req, res) => {
     console.error("Erro no cadastro:", err);
     res.status(500).json({ erro: "Erro interno ao cadastrar" });
   }
+};
+
+// ================== LOGIN ==================
+exports.login = async (req, res) => {
+  try {
+    const { email, senha } = req.body;
+
+    if (!email || !senha) {
+      return res.status(400).json({ erro: "Email e senha são obrigatórios" });
+    }
+
+    const result = await query(
+      "SELECT idpessoa, nomepessoa, emailpessoa FROM pessoa WHERE emailpessoa = $1 AND senhapessoa = $2",
+      [email, senha]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ sucesso: false, erro: "Credenciais inválidas" });
+    }
+
+    const usuario = result.rows[0];
+    res.json({ sucesso: true, usuario });
+
+  } catch (err) {
+    console.error("Erro no login:", err);
+    res.status(500).json({ erro: "Erro interno ao logar" });
+  }
+};
+
+// ================== LOGOUT ==================
+exports.logout = (req, res) => {
+  res.clearCookie("usuarioLogado");
+  res.json({ sucesso: true, mensagem: "Logout realizado" });
 };

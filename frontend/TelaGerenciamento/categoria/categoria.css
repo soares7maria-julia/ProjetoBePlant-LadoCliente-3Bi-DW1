@@ -1,0 +1,123 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #26a69a;
+  color: #333;
+  padding: 2rem;
+}
+
+h1 {
+  color: #031d16;
+  margin-bottom: 2rem;
+}
+
+h2 {
+  color: #0a3126;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #ccc;
+}
+
+section {
+  background-color: #d0fdf3;
+  color: #333;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Formulário */
+form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type="text"],
+input[type="number"] {
+  padding: 0.6rem 1rem;
+  background-color: #effffe;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+input:focus {
+  outline: none;
+  border-color: #28aa83;
+  box-shadow: 0 0 0 3px rgba(40,170,131,0.2);
+}
+
+/* Botões */
+button {
+  border: none;
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary { background-color: #7fd8c9; color: #0a251d; }
+.btn-secondary { background-color: #80cbb8; color: #174638; }
+.btn-danger { background-color: #5e1818; color: #fff; }
+.btn-save { background-color: #9ae6cf; color: #28aa83; }
+.btn-cancel { background-color: #a8ddda; color: #1f6158; }
+
+/* Tabela */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  color: #28aa83;
+  font-weight: 600;
+}
+
+tbody tr:hover {
+  background-color: #f2f2f2;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  body { padding: 1rem; }
+
+  table, thead, tbody, th, td, tr { display: block; }
+  thead tr { position: absolute; top: -9999px; left: -9999px; }
+  tr { border: 1px solid #ddd; margin-bottom: 1rem; }
+  td { 
+    border: none; 
+    border-bottom: 1px solid #ddd; 
+    position: relative; 
+    padding-left: 50%; 
+    text-align: right; 
+  }
+  td:before {
+    position: absolute;
+    left: 1rem;
+    width: 45%;
+    text-align: left;
+    font-weight: bold;
+    color: #28aa83;
+  }
+
+  /* Ajusta os rótulos da tabela de Categoria */
+  #categoriasTableBody td:nth-of-type(1):before { content: "ID"; }
+  #categoriasTableBody td:nth-of-type(2):before { content: "Nome"; }
+}

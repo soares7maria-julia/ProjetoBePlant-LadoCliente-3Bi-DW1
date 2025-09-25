@@ -1,28 +1,26 @@
-// Helpers para cookies
+// ---------------------------- HELPERS PARA COOKIES ----------------------------
 function setCookie(name, value, days = 7) {
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
   document.cookie = name + "=" + encodeURIComponent(value) + "; expires=" + expires + "; path=/";
 }
 
-function getCookie(name) {
-  return document.cookie.split("; ").reduce((r, v) => {
-    const parts = v.split("=");
-    return parts[0] === name ? decodeURIComponent(parts[1]) : r;
-  }, "");
+function getCookieValue(name) {
+  const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+  return match ? decodeURIComponent(match[1]) : null;
 }
 
-function deleteCookie(name) {
-  document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+// Função única para pegar o usuário logado
+function getUsuarioLogadoFromCookie() {
+  const match = document.cookie.match(/(?:^|; )usuarioLogado=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
 }
 
-// Estado da aplicação
+// ---------------------------- ESTADO DA APLICAÇÃO ----------------------------
 let todosProdutos = [];
 let categoriaAtiva = "todas";
 let termoPesquisa = "";
-let usuarioLogado = getCookie("usuarioLogado");
 
 // ---------------------------- PRODUTOS ----------------------------
-
 async function carregarProdutos() {
   try {
     const resposta = await fetch("http://localhost:3001/produto");
@@ -80,15 +78,6 @@ function criarCardProduto(produto) {
 }
 
 // ---------------------------- CARRINHO ----------------------------
-
-// ===== Funções auxiliares de cookies =====
-function setCookie(name, value, days = 7) {
-  const date = new Date();
-  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-  const expires = "expires=" + date.toUTCString();
-  document.cookie = `${name}=${encodeURIComponent(value)};${expires};path=/`;
-}
-
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -96,11 +85,9 @@ function getCookie(name) {
   return null;
 }
 
-// ===== Adicionar ao carrinho =====
 function adicionarAoCarrinho(id) {
   let carrinho = JSON.parse(getCookie("carrinho") || "[]");
 
-  // Buscar o produto na lista já carregada (todosProdutos)
   const produto = todosProdutos.find(p => p.iditem === id);
 
   if (!produto) {
@@ -108,11 +95,10 @@ function adicionarAoCarrinho(id) {
     return;
   }
 
-  // Verifica se já existe no carrinho
   const itemExistente = carrinho.find(item => item.id === id);
 
   if (itemExistente) {
-    itemExistente.quantidade += 1; // soma quantidade
+    itemExistente.quantidade += 1;
   } else {
     carrinho.push({
       id: id,
@@ -122,29 +108,28 @@ function adicionarAoCarrinho(id) {
     });
   }
 
-  // Salvar no cookie
   setCookie("carrinho", JSON.stringify(carrinho));
   alert(`${produto.nomeitem} adicionado ao carrinho!`);
 }
 
-
 // ---------------------------- LOGIN ----------------------------
-
 function verificarLogin() {
-  if (usuarioLogado) {
-    mostrarUsuarioLogado(usuarioLogado);
+  const usuario = getUsuarioLogadoFromCookie();
+  if (usuario) {
+    mostrarUsuarioLogado(usuario);
   }
 }
 
-function login(username) {
-  usuarioLogado = username;
-  setCookie("usuarioLogado", username);
-  mostrarUsuarioLogado(username);
+function login(usuario) {
+  const nome = usuario.NOMEPESSOA || usuario.nome || usuario.NOME;
+  if (nome) {
+    setCookie("usuarioLogado", nome);
+    mostrarUsuarioLogado(nome);
+  }
 }
 
 function logout() {
-  usuarioLogado = null;
-  deleteCookie("usuarioLogado");
+  document.cookie = "usuarioLogado=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
   document.getElementById("login-btn").style.display = "block";
   document.getElementById("nickname").style.display = "none";
   document.getElementById("logout-btn").style.display = "none";
@@ -152,13 +137,12 @@ function logout() {
 
 function mostrarUsuarioLogado(username) {
   document.getElementById("login-btn").style.display = "none";
-  document.getElementById("nickname").textContent = username.toUpperCase();
+  document.getElementById("nickname").textContent = username; // ou username.toUpperCase()
   document.getElementById("nickname").style.display = "block";
   document.getElementById("logout-btn").style.display = "block";
 }
 
 // ---------------------------- CATEGORIAS ----------------------------
-
 async function carregarCategorias() {
   try {
     const res = await fetch("http://localhost:3001/categoria");
@@ -182,7 +166,6 @@ async function carregarCategorias() {
 }
 
 // ---------------------------- EVENTOS ----------------------------
-
 function configurarEventos() {
   document.querySelectorAll(".category-btn").forEach(btn => {
     btn.addEventListener("click", function() {
@@ -225,7 +208,6 @@ function configurarEventos() {
 }
 
 // ---------------------------- SIDEBAR ----------------------------
-
 document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById("sidebar");
   const menuToggle = document.getElementById("menu-toggle");
@@ -248,5 +230,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   carregarCategorias();
   carregarProdutos();
-  verificarLogin();
+  verificarLogin(); // garante que o nome aparece no carregamento
 });

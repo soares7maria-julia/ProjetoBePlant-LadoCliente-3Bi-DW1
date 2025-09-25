@@ -61,28 +61,61 @@
        <div class="form-group cargo-group">
   <input type="checkbox" id="chkFuncionario">
   <label for="chkFuncionario">Funcionário:</label>
-  <select id="cargopessoa" name="cargopessoa" required>
-  </select>
+  <select id="cargopessoa" name="cargopessoa" required>  </select>
+    <input type="number" id="salario" name="salario" placeholder="Salário" style="display:none;">
 </div>
       </form>
     </section>
 
-    <section class="list-section">
-      <h2>Pessoas Cadastradas</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>CPF</th>
-            <th>Endereço</th>
-            <th>Cargo</th> <!-- nova coluna -->
-          </tr>
-        </thead>
-        <tbody id="pessoasTableBody"></tbody>
-      </table>
-    </section>
+   <section class="list-section">
+  <h2>Listas Cadastradas</h2>
+
+  <!-- Abas -->
+  <div class="tabs">
+    <button class="tab-button active" data-target="pessoasTab">Pessoas</button>
+    <button class="tab-button" data-target="clienteTab">Cliente</button>
+    <button class="tab-button" data-target="funcionariosTab">Funcionários</button>
+  </div>
+
+  <!-- Conteúdo das Abas -->
+  <div class="tab-content active" id="pessoasTab">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Nome</th><th>Email</th><th>CPF</th><th>Endereço</th><th>Cargo</th>
+        </tr>
+      </thead>
+      <tbody id="pessoasTableBody"></tbody>
+    </table>
+  </div>
+<!-- Cliente -->
+<div class="tab-content" id="clienteTab">
+  <table>
+    <thead>
+      <tr>
+        <th>ID Pessoa</th>
+        <th>Data de Cadastro</th>
+      </tr>
+    </thead>
+    <tbody id="clienteTableBody"></tbody>
+  </table>
+</div>
+
+<!-- Funcionário -->
+<div class="tab-content" id="funcionariosTab">
+  <table>
+    <thead>
+      <tr>
+        <th>ID Pessoa</th>
+        <th>ID Cargo</th>
+        <th>Cargo</th>
+        <th>Salário</th>
+      </tr>
+    </thead>
+    <tbody id="funcionariosTableBody"></tbody>
+  </table>
+</div>
+
   </main>
 
   <div id="messageContainer" class="message-container"></div>

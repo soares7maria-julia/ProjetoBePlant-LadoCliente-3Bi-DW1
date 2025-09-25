@@ -34,14 +34,23 @@ loginForm.addEventListener("submit", async (e) => {
     });
 
     const data = await res.json();
+if (data.sucesso) {
+  console.log("Resposta de login:", data); // debug: veja o que o servidor retornou
 
-    if (data.sucesso) {
-      // guarda usuário logado em cookie por 1h
-      document.cookie = `usuarioLogado=${encodeURIComponent(JSON.stringify(data.usuario))}; path=/; max-age=3600`;
-      window.location.href = "../3TelaPrincipal/TPrincipal.html"; // ajuste conforme sua estrutura
-    } else {
-      alert(data.erro || "Credenciais inválidas");
-    }
+  const rawUsuario = data.usuario;
+  const nome =
+    (rawUsuario && (rawUsuario.NOMEPESSOA || rawUsuario.nome || rawUsuario.NOME)) ||
+    data.NOMEPESSOA ||
+    null;
+
+  if (nome) {
+    document.cookie = `usuarioLogado=${encodeURIComponent(nome)}; path=/; max-age=3600`;
+  }
+
+  window.location.href = "../3TelaPrincipal/menu.html";
+} else {
+  alert(data.erro || "Credenciais inválidas");
+}
   } catch (err) {
     console.error("Erro ao tentar login:", err);
     alert("Erro de conexão. Tente novamente mais tarde.");

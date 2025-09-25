@@ -179,14 +179,14 @@ async function salvarOperacao() {
     senhapessoa: document.getElementById('senhapessoa').value,
     cpfpessoa: document.getElementById('cpfpessoa').value,
     enderecopessoa: document.getElementById('enderecopessoa').value,
-    isFuncionario: document.getElementById('chkFuncionario').checked,
-    fkcargo: document.getElementById('chkFuncionario').checked
-      ? document.getElementById('cargopessoa').value
-      : null
+    isFuncionario: chkFuncionario.checked,
+    fkcargo: chkFuncionario.checked ? cargoSelect.value : null,
+    salario: chkFuncionario.checked ? salarioInput.value : null
   };
 
   let response = null;
   try {
+    // ==== PESSOA ====
     if (operacao === 'incluir') {
       response = await fetch(`${API_BASE_URL}/pessoa`, {
         method: 'POST',
@@ -200,19 +200,103 @@ async function salvarOperacao() {
         body: JSON.stringify(pessoa)
       });
     } else if (operacao === 'excluir') {
+      // exclui pessoa -> cascata no BD deve remover cliente/funcionario
       response = await fetch(`${API_BASE_URL}/pessoa/${currentPessoaId}`, {
         method: 'DELETE'
       });
     }
 
-    if (response && response.ok) {
-      mostrarMensagem(`Operação ${operacao} realizada com sucesso!`, 'success');
-      limparFormulario();
-      carregarPessoas();
-    } else {
-      mostrarMensagem('Erro na operação', 'error');
+    if (!response || !response.ok) {
+      return mostrarMensagem('Erro na operação', 'error');
     }
+
+    let pessoaSalva = null;
+    if (operacao !== 'excluir') {
+      pessoaSalva = await response.json();
+    }
+
+    // ==== CLIENTE / FUNCIONÁRIO ====
+    if (operacao === 'incluir') {
+      if (pessoa.isFuncionario) {
+        await fetch(`${API_BASE_URL}/funcionario`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            idpessoa: pessoaSalva.idpessoa,
+            fkcargo: pessoa.fkcargo,
+            salario: pessoa.salario
+          })
+        });
+      } else {
+        await fetch(`${API_BASE_URL}/cliente`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idpessoa: pessoaSalva.idpessoa })
+        });
+      }
+    }
+
+    if (operacao === 'alterar') {
+      if (pessoa.isFuncionario) {
+        // garantir que ele seja funcionário
+        await fetch(`${API_BASE_URL}/funcionario/${currentPessoaId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fkcargo: pessoa.fkcargo,
+            salario: pessoa.salario
+          })
+        }).then(async r => {
+          if (r.status === 404) {
+            // não existia, cria
+            await fetch(`${API_BASE_URL}/funcionario`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                idpessoa: currentPessoaId,
+                fkcargo: pessoa.fkcargo,
+                salario: pessoa.salario
+              })
+            });
+          }
+        });
+
+        // remove de cliente se estava
+        await fetch(`${API_BASE_URL}/cliente/${currentPessoaId}`, {
+          method: 'DELETE'
+        });
+      } else {
+        // garantir que ele seja cliente
+        await fetch(`${API_BASE_URL}/cliente/${currentPessoaId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ datacadastro: new Date().toISOString() })
+        }).then(async r => {
+          if (r.status === 404) {
+            // não existia, cria
+            await fetch(`${API_BASE_URL}/cliente`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ idpessoa: currentPessoaId })
+            });
+          }
+        });
+
+        // remove de funcionário se estava
+        await fetch(`${API_BASE_URL}/funcionario/${currentPessoaId}`, {
+          method: 'DELETE'
+        });
+      }
+    }
+
+    mostrarMensagem(`Operação ${operacao} realizada com sucesso!`, 'success');
+    limparFormulario();
+    carregarPessoas();
+    carregarCliente();
+    carregarFuncionarios();
+
   } catch (err) {
+    console.error(err);
     mostrarMensagem('Erro ao salvar pessoa', 'error');
   }
 
@@ -240,7 +324,7 @@ async function carregarPessoas() {
     mostrarMensagem('Erro ao carregar lista de pessoas', 'error');
   }
 }
-
+//---------------------renderizar Listas------------------------------//
 function renderizarTabelaPessoas(pessoas) {
   pessoasTableBody.innerHTML = '';
   pessoas.forEach(pessoa => {
@@ -257,7 +341,134 @@ function renderizarTabelaPessoas(pessoas) {
   });
 }
 
+
+function renderizarTabelaCliente(clientes) {
+  const tbody = document.getElementById('clienteTableBody');
+  tbody.innerHTML = '';
+  clientes.forEach(cli => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${cli.idpessoa}</td>
+      <td>${cli.nomepessoa}</td>
+      <td>${cli.emailpessoa}</td>
+      <td>${cli.cpfpessoa || ''}</td>
+      <td>${cli.enderecopessoa || ''}</td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+
+function renderizarTabelaFuncionarios(funcionarios) {
+  const tbody = document.getElementById('funcionariosTableBody');
+  tbody.innerHTML = '';
+  funcionarios.forEach(func => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${func.idpessoa}</td>
+      <td>${func.nomepessoa}</td>
+      <td>${func.salario}</td>
+      <td>${func.nomecargo || ''}</td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 async function selecionarPessoa(id) {
   searchId.value = id;
   await buscarPessoa();
 }
+
+// ---- Abas ----
+document.querySelectorAll('.tab-button').forEach(button => {
+  button.addEventListener('click', () => {
+    // Alternar botão ativo
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+
+    // Alternar conteúdo ativo
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.getElementById(button.dataset.target).classList.add('active');
+  });
+});
+
+// ---- Carregar Cliente ----
+function formatarData(dataISO) {
+  if (!dataISO) return "";
+  const data = new Date(dataISO);
+  return data.toLocaleDateString("pt-BR", { timeZone: "UTC" });
+}
+
+async function carregarCliente() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/cliente`);
+    if (response.ok) {
+      const clientes = await response.json();
+      const tbody = document.getElementById('clienteTableBody');
+      tbody.innerHTML = '';
+      clientes.forEach(cli => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${cli.idpessoa}</td>
+          <td>${formatarData(cli.datacadastro)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+  } catch (err) {
+    mostrarMensagem('Erro ao carregar lista de clientes', 'error');
+  }
+}
+
+function formatarSalario(valor) {
+  if (valor === null || valor === undefined || valor === '') return '';
+  const numero = Number(valor);
+  if (isNaN(numero)) return valor;
+  return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+async function carregarFuncionarios() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/funcionario`);
+    if (response.ok) {
+      const funcionarios = await response.json();
+      const tbody = document.getElementById('funcionariosTableBody');
+      tbody.innerHTML = '';
+      funcionarios.forEach(func => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${func.idpessoa}</td>
+          <td>${formatarSalario(func.salario)}</td>
+          <td>${func.nomecargo || ''}</td>
+          <td>${func.fkcargo || ''}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+  } catch (err) {
+    mostrarMensagem('Erro ao carregar lista de funcionários', 'error');
+  }
+}
+
+
+// Chama os carregamentos iniciais
+document.addEventListener('DOMContentLoaded', () => {
+  carregarCliente();
+  carregarFuncionarios();
+});
+const chkFuncionario = document.getElementById('chkFuncionario');
+const cargoSelect = document.getElementById('cargopessoa');
+const salarioInput = document.getElementById('salario');
+
+chkFuncionario.addEventListener('change', () => {
+  cargoSelect.disabled = !chkFuncionario.checked;
+  salarioInput.style.display = chkFuncionario.checked ? "inline-block" : "none";
+  if (!chkFuncionario.checked) {
+    cargoSelect.value = "";
+    salarioInput.value = "";
+  }
+});

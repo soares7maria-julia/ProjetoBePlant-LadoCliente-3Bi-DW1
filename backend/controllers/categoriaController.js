@@ -121,10 +121,7 @@ exports.atualizarCategoria = async (req, res) => {
   }
 };
 
-/**
- * Deleta uma categoria
- * DELETE /:id
- */
+/// controller.categoria.js (substitua a função atual)
 exports.deletarCategoria = async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10);
@@ -133,13 +130,20 @@ exports.deletarCategoria = async (req, res) => {
     const exist = await query('SELECT 1 FROM categoria WHERE idcategoria = $1', [id]);
     if (exist.rows.length === 0) return res.status(404).json({ error: 'Categoria não encontrada' });
 
-    await query('DELETE FROM categoria WHERE idcategoria = $1', [id]);
-    res.status(204).send();
+    // usa RETURNING para garantir que realmente deletou e conseguir debug
+    const result = await query('DELETE FROM categoria WHERE idcategoria = $1 RETURNING idcategoria', [id]);
+
+    if (!result.rowCount) {
+      return res.status(404).json({ error: 'Categoria não encontrada ao deletar' });
+    }
+
+    // retorna 200 com JSON contendo o id deletado
+    return res.status(200).json({ deleted: result.rows[0].idcategoria });
   } catch (error) {
     console.error('Erro ao deletar categoria:', error);
     if (error && error.code === '23503') {
       return res.status(400).json({ error: 'Não é possível deletar categoria com dependências' });
     }
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    return res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };

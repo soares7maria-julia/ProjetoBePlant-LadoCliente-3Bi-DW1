@@ -61,11 +61,41 @@ document.querySelectorAll("input").forEach(input => {
 
 cadastroForm.addEventListener("submit", function(e) {
     e.preventDefault();
-    
+
     if (!validatePasswords()) {
         return;
     }
+
+    const nome = document.getElementById("nome").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senha").value.trim();
+    const cpf = document.getElementById("cpf").value.trim();
+    const endereco = document.getElementById("endereco").value.trim();
+
+    console.log("Enviando dados:", { nome, email, senha, cpf, endereco }); // debug
+
+    fetch("http://localhost:3001/login/cadastrar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome, email, senha, cpf, endereco })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.erro) {
+            alert("Erro: " + data.erro);
+       } else {
+    alert("Cadastro realizado com sucesso!");
+    // já loga o usuário salvando o nome no cookie (duração 1h)
+    document.cookie = `usuarioLogado=${encodeURIComponent(nome)}; path=/; max-age=3600`;
+    window.location.href = "../3TelaPrincipal/menu.html";
+}
+    })
+    .catch(err => {
+        console.error("Erro ao cadastrar:", err);
+        alert("Erro de conexão com o servidor.");
+    });
 });
+
 
 btnLogin.addEventListener("click", () => {
     // Redireciona para a página de login
