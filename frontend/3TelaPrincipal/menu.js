@@ -15,6 +15,8 @@ function getUsuarioLogadoFromCookie() {
   return match ? decodeURIComponent(match[1]) : null;
 }
 
+
+
 // ---------------------------- ESTADO DA APLICAÇÃO ----------------------------
 let todosProdutos = [];
 let categoriaAtiva = "todas";
@@ -86,8 +88,6 @@ function getCookie(name) {
 }
 
 function adicionarAoCarrinho(id) {
-  let carrinho = JSON.parse(getCookie("carrinho") || "[]");
-
   const produto = todosProdutos.find(p => p.iditem === id);
 
   if (!produto) {
@@ -95,49 +95,67 @@ function adicionarAoCarrinho(id) {
     return;
   }
 
-  const itemExistente = carrinho.find(item => item.id === id);
+  // objeto compatível com carrinho.js
+  const produtoCarrinho = {
+    nome: produto.nomeitem,
+    preco: parseFloat(produto.valorunitario),
+    quantidade: 1,
+    imagem: `http://localhost:3001/images/${produto.imagemitem || "sem-imagem.png"}`
+  };
+
+  let carrinho = JSON.parse(getCookie("carrinho") || "[]");
+
+  const itemExistente = carrinho.find(item => item.nome === produtoCarrinho.nome);
 
   if (itemExistente) {
     itemExistente.quantidade += 1;
   } else {
-    carrinho.push({
-      id: id,
-      nome: produto.nomeitem,
-      preco: parseFloat(produto.valorunitario),
-      quantidade: 1
-    });
+    carrinho.push(produtoCarrinho);
   }
 
   setCookie("carrinho", JSON.stringify(carrinho));
+  carregarCarrinho(); // 🔹 força atualização imediata no modal
   alert(`${produto.nomeitem} adicionado ao carrinho!`);
 }
 
+
 // ---------------------------- LOGIN ----------------------------
 function verificarLogin() {
-  const usuario = getUsuarioLogadoFromCookie();
-  if (usuario) {
-    mostrarUsuarioLogado(usuario);
+  const usuarioStr = getUsuarioLogadoFromCookie();
+  if (usuarioStr) {
+    try {
+      const usuario = JSON.parse(usuarioStr); // objeto completo
+      mostrarUsuarioLogado(usuario.nomepessoa); // só exibe o nome
+    } catch (e) {
+      console.error("Erro ao parsear usuário:", e);
+    }
   }
 }
 
-function login(usuario) {
-  const nome = usuario.NOMEPESSOA || usuario.nome || usuario.NOME;
-  if (nome) {
-    setCookie("usuarioLogado", nome);
-    mostrarUsuarioLogado(nome);
+function getUsuarioLogado() {
+  const cookie = document.cookie
+    .split("; ")
+    .find(row => row.startsWith("usuarioLogado="));
+  if (!cookie) return null;
+  try {
+    return JSON.parse(decodeURIComponent(cookie.split("=")[1]));
+  } catch (e) {
+    return null;
   }
 }
 
-function logout() {
+// 🔹 Renomeado
+function logoutMenu() {
   document.cookie = "usuarioLogado=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
   document.getElementById("login-btn").style.display = "block";
   document.getElementById("nickname").style.display = "none";
   document.getElementById("logout-btn").style.display = "none";
+  window.location.href = "../1LoginCliente/login.html";
 }
 
 function mostrarUsuarioLogado(username) {
   document.getElementById("login-btn").style.display = "none";
-  document.getElementById("nickname").textContent = username; // ou username.toUpperCase()
+  document.getElementById("nickname").textContent = username;
   document.getElementById("nickname").style.display = "block";
   document.getElementById("logout-btn").style.display = "block";
 }
@@ -204,7 +222,8 @@ function configurarEventos() {
     window.location.href = "../1LoginCliente/login.html";
   });
 
-  logoutBtn.addEventListener("click", logout);
+  logoutBtn.addEventListener("click", logoutMenu);
+
 }
 
 // ---------------------------- SIDEBAR ----------------------------

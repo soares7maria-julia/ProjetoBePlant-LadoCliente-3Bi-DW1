@@ -13,11 +13,35 @@ const btnSalvar = document.getElementById('btnSalvar');
 const produtosTableBody = document.getElementById('produtosTableBody');
 const messageContainer = document.getElementById('messageContainer');
 const selectCategoria = document.getElementById('categoria');
+const imagemInput = document.getElementById('imagem');
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
   carregarProdutos();
   carregarCategorias();
+
+  // 👉 Eventos de imagem só registrados uma vez
+  imagemInput.addEventListener('paste', (event) => {
+    const items = event.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].kind === 'file') {
+        const file = items[i].getAsFile();
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        imagemInput.files = dataTransfer.files;
+      }
+    }
+  });
+
+  imagemInput.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+  imagemInput.addEventListener('drop', (e) => {
+    e.preventDefault();
+    if (e.dataTransfer.files.length > 0) {
+      imagemInput.files = e.dataTransfer.files;
+    }
+  });
 });
 
 btnBuscar.addEventListener('click', buscarProduto);
@@ -59,12 +83,9 @@ async function carregarCategorias() {
     const response = await fetch(`${API_BASE_URL}/categoria`);
     if (response.ok) {
       const categorias = await response.json();
-       console.log("Categorias recebidas:", categorias); // <---- teste
 
-      // Limpa e adiciona a opção padrão
       selectCategoria.innerHTML = '<option value="" disabled selected> selecione uma categoria </option>';
 
-      // Adiciona todas as categorias vindas do backend
       categorias.forEach(cat => {
         const option = document.createElement('option');
         option.value = cat.idcategoria;
@@ -76,7 +97,6 @@ async function carregarCategorias() {
     mostrarMensagem('Erro ao carregar categorias', 'error');
   }
 }
-
 
 async function buscarProduto() {
   const id = searchId.value.trim();
@@ -103,14 +123,23 @@ async function buscarProduto() {
 
 function preencherFormulario(produto) {
   currentProdutoId = produto.iditem;
-searchId.value = produto.iditem;
-document.getElementById('nome').value = produto.nomeitem || '';
-document.getElementById('estoque').value = produto.estoqueitem || '';
-document.getElementById('valor').value = produto.valorunitario || '';
-document.getElementById('imagem').value = produto.imagemitem || '';
-selectCategoria.value = produto.idcategoria || '';
-  if (produto.idcategoria) {
-    selectCategoria.value = produto.idcategoria;
+  searchId.value = produto.iditem;
+  document.getElementById('nome').value = produto.nomeitem || '';
+  document.getElementById('estoque').value = produto.estoqueitem || '';
+  document.getElementById('valor').value = produto.valorunitario || '';
+
+  selectCategoria.value = produto.idcategoria || '';
+
+  if (produto.imagemitem) {
+    let preview = document.getElementById('imagemPreview');
+    if (!preview) {
+      preview = document.createElement('img');
+      preview.id = 'imagemPreview';
+      preview.style.maxWidth = '120px';
+      preview.style.marginTop = '10px';
+      imagemInput.insertAdjacentElement('afterend', preview);
+    }
+    preview.src = `${API_BASE_URL}/images/${produto.imagemitem}`;
   }
 }
 
@@ -143,49 +172,46 @@ function excluirProduto() {
 }
 
 async function salvarOperacao() {
-  const formData = new FormData(form);
-  const produto = {
-  idItem: searchId.value,
-  nomeItem: formData.get('nome'),
-  estoqueItem: parseInt(formData.get('estoque')) || 0,
-  valorUnitario: parseFloat(formData.get('valor')) || 0.0,
-  imagemItem: formData.get('imagem'),
-  idcategoria: parseInt(formData.get('categoria'))
-};
+  const formData = new FormData();
+  formData.append('idItem', searchId.value);
+  formData.append('nomeItem', document.getElementById('nome').value);
+  formData.append('estoqueItem', document.getElementById('estoque').value);
+  formData.append('valorUnitario', document.getElementById('valor').value);
+  formData.append('idcategoria', document.getElementById('categoria').value);
 
+  const file = imagemInput.files[0];
+  if (file) {
+    formData.append('imagem', file);
+  }
 
-  let response = null;
+  let url = `${API_BASE_URL}/produto`;
+  let method = 'POST';
+
+  if (operacao === 'alterar') {
+    url = `${API_BASE_URL}/produto/${currentProdutoId}`;
+    method = 'PUT';
+  } else if (operacao === 'excluir') {
+    url = `${API_BASE_URL}/produto/${currentProdutoId}`;
+    method = 'DELETE';
+  }
+
   try {
-    if (operacao === 'incluir') {
-      response = await fetch(`${API_BASE_URL}/produto`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(produto)
-      });
-    } else if (operacao === 'alterar') {
-      response = await fetch(`${API_BASE_URL}/produto/${currentProdutoId}`, {
-        method: 'PUT', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(produto)
-      });
-    } else if (operacao === 'excluir') {
-      response = await fetch(`${API_BASE_URL}/produto/${currentProdutoId}`, {
-        method: 'DELETE'
-      });
-    }
+    const response = await fetch(url, {
+      method,
+      body: operacao === 'excluir' ? undefined : formData
+    });
 
     if (response.ok) {
       mostrarMensagem(`Operação ${operacao} realizada com sucesso!`, 'success');
       limparFormulario();
       carregarProdutos();
+      cancelarOperacao(); // 🔹 volta pro estado inicial
     } else {
       mostrarMensagem('Erro na operação', 'error');
     }
   } catch (err) {
     mostrarMensagem('Erro ao salvar produto', 'error');
   }
-
-  mostrarBotoes(true, false, false, false, false, true);
-  bloquearCampos(false);
-  searchId.focus();
 }
 
 function cancelarOperacao() {
@@ -212,15 +238,15 @@ function renderizarTabelaProdutos(produtos) {
   produtosTableBody.innerHTML = '';
   produtos.forEach(produto => {
     const row = document.createElement('tr');
-   row.innerHTML = `
-  <td><button class="btn-id" onclick="selecionarProduto(${produto.iditem})">${produto.iditem}</button></td>
-  <td>${produto.nomeitem}</td>
-  <td>${produto.estoqueitem}</td>
-  <td>${produto.valorunitario}</td>
-<td><img src="http://localhost:3001/images/${produto.imagemitem || ''}" 
-         alt="Imagem" style="max-width:80px; border-radius:6px;"></td>
-  <td>${produto.nomecategoria || ''}</td>
-`;
+    row.innerHTML = `
+      <td><button class="btn-id" onclick="selecionarProduto(${produto.iditem})">${produto.iditem}</button></td>
+      <td>${produto.nomeitem}</td>
+      <td>${produto.estoqueitem}</td>
+      <td>${produto.valorunitario}</td>
+      <td><img src="${API_BASE_URL}/images/${produto.imagemitem || ''}" 
+               alt="Imagem" style="max-width:80px; border-radius:6px;"></td>
+      <td>${produto.nomecategoria || ''}</td>
+    `;
     produtosTableBody.appendChild(row);
   });
 }

@@ -37,15 +37,11 @@ loginForm.addEventListener("submit", async (e) => {
 if (data.sucesso) {
   console.log("Resposta de login:", data); // debug: veja o que o servidor retornou
 
-  const rawUsuario = data.usuario;
-  const nome =
-    (rawUsuario && (rawUsuario.NOMEPESSOA || rawUsuario.nome || rawUsuario.NOME)) ||
-    data.NOMEPESSOA ||
-    null;
 
-  if (nome) {
-    document.cookie = `usuarioLogado=${encodeURIComponent(nome)}; path=/; max-age=3600`;
-  }
+  if (data.usuario) {
+  // Salva o objeto inteiro (idpessoa, nomepessoa, emailpessoa...)
+  document.cookie = `usuarioLogado=${encodeURIComponent(JSON.stringify(data.usuario))}; path=/; max-age=3600`;
+}
 
   window.location.href = "../3TelaPrincipal/menu.html";
 } else {
@@ -56,6 +52,8 @@ if (data.sucesso) {
     alert("Erro de conexão. Tente novamente mais tarde.");
   }
 });
+
+
 
 // Ir para cadastro
 btnCadastrar.addEventListener("click", () => {

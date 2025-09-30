@@ -86,7 +86,10 @@ cadastroForm.addEventListener("submit", function(e) {
        } else {
     alert("Cadastro realizado com sucesso!");
     // já loga o usuário salvando o nome no cookie (duração 1h)
-    document.cookie = `usuarioLogado=${encodeURIComponent(nome)}; path=/; max-age=3600`;
+   // salva objeto igual ao login.js
+const usuario = { nomepessoa: nome, emailpessoa: email, cpfpessoa: cpf, enderecopessoa: endereco };
+document.cookie = `usuarioLogado=${encodeURIComponent(JSON.stringify(usuario))}; path=/; max-age=3600`;
+
     window.location.href = "../3TelaPrincipal/menu.html";
 }
     })

@@ -66,7 +66,17 @@ exports.login = async (req, res) => {
     }
 
     const usuario = result.rows[0];
-    res.json({ sucesso: true, usuario });
+
+// 🔹 Grava cookie no navegador
+res.cookie("usuarioLogado", JSON.stringify(usuario), {
+  httpOnly: false, // precisa ser false porque seu carrinho.js lê o cookie no navegador
+  maxAge: 24 * 60 * 60 * 1000, // 1 dia
+  path: "/"
+});
+
+// 🔹 Continua retornando no body também (caso queira usar no front)
+res.json({ sucesso: true, usuario });
+
 
   } catch (err) {
     console.error("Erro no login:", err);

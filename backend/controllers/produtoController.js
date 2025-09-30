@@ -38,18 +38,25 @@ exports.obterProduto = async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar produto' });
   }
 };
-
 // Criar novo produto
 exports.criarProduto = async (req, res) => {
-  const { nomeItem, estoqueItem, valorUnitario, imagemItem, idcategoria } = req.body;
-  const sql = `
-    INSERT INTO item (nomeItem, estoqueItem, valorUnitario, imagemItem, idcategoria)
-    VALUES ($1, $2, $3, $4, $5)
-    RETURNING idItem
-  `;
   try {
+    const { nomeItem, estoqueItem, valorUnitario, idcategoria } = req.body;
+    // se veio arquivo, pega o nome dele, senão usa o campo de texto (se você quiser manter compatibilidade)
+    const imagemItem = req.file ? req.file.filename : req.body.imagemItem;
+
+    const sql = `
+      INSERT INTO item (nomeItem, estoqueItem, valorUnitario, imagemItem, idcategoria)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING idItem
+    `;
+
     const result = await query(sql, [nomeItem, estoqueItem, valorUnitario, imagemItem, idcategoria]);
-    res.status(201).json({ idItem: result.rows[0].iditem, ...req.body });
+
+    res.status(201).json({ 
+      idItem: result.rows[0].iditem, 
+      nomeItem, estoqueItem, valorUnitario, imagemItem, idcategoria 
+    });
   } catch (err) {
     console.error('Erro ao criar produto:', err);
     res.status(500).json({ error: 'Erro ao criar produto' });
@@ -58,24 +65,30 @@ exports.criarProduto = async (req, res) => {
 
 // Atualizar produto
 exports.atualizarProduto = async (req, res) => {
-  const { id } = req.params;
-  const { nomeItem, estoqueItem, valorUnitario, imagemItem, idcategoria } = req.body;
-  const sql = `
-    UPDATE item
-    SET nomeItem=$1, estoqueItem=$2, valorUnitario=$3, imagemItem=$4, idcategoria=$5
-    WHERE idItem=$6
-  `;
   try {
+    const { id } = req.params;
+    const { nomeItem, estoqueItem, valorUnitario, idcategoria } = req.body;
+    const imagemItem = req.file ? req.file.filename : req.body.imagemItem;
+
+    const sql = `
+      UPDATE item
+      SET nomeItem=$1, estoqueItem=$2, valorUnitario=$3, imagemItem=$4, idcategoria=$5
+      WHERE idItem=$6
+    `;
+
     const result = await query(sql, [nomeItem, estoqueItem, valorUnitario, imagemItem, idcategoria, id]);
+
     if (result.rowCount === 0) {
       return res.status(404).json({ error: 'Produto não encontrado' });
     }
-    res.json({ idItem: id, ...req.body });
+
+    res.json({ idItem: id, nomeItem, estoqueItem, valorUnitario, imagemItem, idcategoria });
   } catch (err) {
     console.error('Erro ao atualizar produto:', err);
     res.status(500).json({ error: 'Erro ao atualizar produto' });
   }
 };
+
 
 // Deletar produto
 exports.deletarProduto = async (req, res) => {

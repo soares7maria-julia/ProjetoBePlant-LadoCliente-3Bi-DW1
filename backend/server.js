@@ -98,7 +98,12 @@ app.use('/categoria', categoriaRoutes);
 const produtoRoutes = require('./routes/produtoRoutes');
 app.use('/produto', produtoRoutes);
 
+const carrinhoRoutes = require("./routes/carrinhoRoutes");
+app.use("/api/carrinho", carrinhoRoutes);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 // Rota padrão
 app.get('/', (req, res) => {
