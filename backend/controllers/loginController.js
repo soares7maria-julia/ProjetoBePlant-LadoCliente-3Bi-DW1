@@ -1,6 +1,7 @@
 const { query } = require('../database');
 
 // ================== CADASTRO ==================
+// ================== CADASTRO ==================
 exports.cadastrar = async (req, res) => {
   try {
     const { nome, email, senha, cpf, endereco } = req.body;
@@ -9,13 +10,14 @@ exports.cadastrar = async (req, res) => {
       return res.status(400).json({ erro: "Nome, email, senha, CPF e endereço são obrigatórios" });
     }
 
-    // Verifica se já existe pessoa com esse email
+    // Verifica duplicados
     const check = await query(
-      "SELECT idpessoa FROM pessoa WHERE emailpessoa = $1",
-      [email]
+      "SELECT idpessoa FROM pessoa WHERE emailpessoa = $1 OR cpfpessoa = $2",
+      [email, cpf]
     );
+
     if (check.rows.length > 0) {
-      return res.status(400).json({ erro: "Email já está em uso" });
+      return res.status(400).json({ erro: "Email ou CPF já estão em uso" });
     }
 
     // Cria pessoa
@@ -35,7 +37,14 @@ exports.cadastrar = async (req, res) => {
       [pessoa.idpessoa]
     );
 
-    // Retorna dados para frontend
+    // 🔹 Grava cookie igual ao login
+    res.cookie("usuarioLogado", JSON.stringify(pessoa), {
+      httpOnly: false, // precisa ser false porque o front lê o cookie
+      maxAge: 3600 * 1000, // 1h
+      path: "/"
+    });
+
+    // Retorna também no body
     res.status(201).json({
       sucesso: true,
       usuario: pessoa

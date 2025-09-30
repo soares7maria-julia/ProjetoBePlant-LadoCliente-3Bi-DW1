@@ -36,6 +36,8 @@ function validatePasswords() {
         passwordError.style.display = "none";
         return true;
     }
+
+    
 }
 
 // Validação em tempo real
@@ -74,29 +76,41 @@ cadastroForm.addEventListener("submit", function(e) {
 
     console.log("Enviando dados:", { nome, email, senha, cpf, endereco }); // debug
 
-    fetch("http://localhost:3001/login/cadastrar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, email, senha, cpf, endereco })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.erro) {
-            alert("Erro: " + data.erro);
-       } else {
-    alert("Cadastro realizado com sucesso!");
-    // já loga o usuário salvando o nome no cookie (duração 1h)
-   // salva objeto igual ao login.js
-const usuario = { nomepessoa: nome, emailpessoa: email, cpfpessoa: cpf, enderecopessoa: endereco };
-document.cookie = `usuarioLogado=${encodeURIComponent(JSON.stringify(usuario))}; path=/; max-age=3600`;
+   fetch("http://localhost:3001/login/cadastrar", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome, email, senha, cpf, endereco })
+})
+.then(data => {
+    if (data.erro) {
+        alert("Erro: " + data.erro);
+    } else {
+        alert("Cadastro realizado com sucesso!");
 
-    window.location.href = "../3TelaPrincipal/menu.html";
-}
-    })
-    .catch(err => {
-        console.error("Erro ao cadastrar:", err);
-        alert("Erro de conexão com o servidor.");
-    });
+        // 🔹 Se o servidor já retorna o usuário com idpessoa
+        if (data.usuario) {
+            document.cookie = `usuarioLogado=${encodeURIComponent(JSON.stringify(data.usuario))}; path=/; max-age=3600`;
+        } else {
+            // fallback caso o servidor só mande idpessoa
+            const usuario = {
+                idpessoa: data.idpessoa,   // precisa vir do backend
+                nomepessoa: nome,
+                emailpessoa: email,
+                cpfpessoa: cpf,
+                enderecopessoa: endereco
+            };
+            document.cookie = `usuarioLogado=${encodeURIComponent(JSON.stringify(usuario))}; path=/; max-age=3600`;
+        }
+
+        window.location.href = "../3TelaPrincipal/menu.html";
+    }
+})
+
+
+.catch(err => {
+    console.error("Erro ao cadastrar:", err);
+    alert("Erro de conexão com o servidor.");
+ });
 });
 
 
