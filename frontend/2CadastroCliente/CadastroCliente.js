@@ -75,44 +75,42 @@ cadastroForm.addEventListener("submit", function(e) {
     const endereco = document.getElementById("endereco").value.trim();
 
     console.log("Enviando dados:", { nome, email, senha, cpf, endereco }); // debug
-
-   fetch("http://localhost:3001/login/cadastrar", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nome, email, senha, cpf, endereco })
+fetch("http://localhost:3001/login/cadastrar", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ nome, email, senha, cpf, endereco })
 })
+.then(res => res.json())
 .then(data => {
-    if (data.erro) {
-        alert("Erro: " + data.erro);
+  if (data.erro) {
+    alert("Erro: " + data.erro);
+  } else {
+    alert("Cadastro realizado com sucesso!");
+
+    // 🔹 Se o servidor já retorna o usuário com idpessoa e nomepessoa
+    if (data.usuario) {
+      document.cookie = `usuarioLogado=${encodeURIComponent(JSON.stringify(data.usuario))}; path=/; max-age=3600`;
     } else {
-        alert("Cadastro realizado com sucesso!");
-
-        // 🔹 Se o servidor já retorna o usuário com idpessoa
-        if (data.usuario) {
-            document.cookie = `usuarioLogado=${encodeURIComponent(JSON.stringify(data.usuario))}; path=/; max-age=3600`;
-        } else {
-            // fallback caso o servidor só mande idpessoa
-            const usuario = {
-                idpessoa: data.idpessoa,   // precisa vir do backend
-                nomepessoa: nome,
-                emailpessoa: email,
-                cpfpessoa: cpf,
-                enderecopessoa: endereco
-            };
-            document.cookie = `usuarioLogado=${encodeURIComponent(JSON.stringify(usuario))}; path=/; max-age=3600`;
-        }
-
-        window.location.href = "../3TelaPrincipal/menu.html";
+      // 🔹 fallback, caso o servidor envie apenas idpessoa
+      const usuario = {
+        idpessoa: data.idpessoa,
+        nomepessoa: nome,
+        emailpessoa: email,
+        cpfpessoa: cpf,
+        enderecopessoa: endereco
+      };
+      document.cookie = `usuarioLogado=${encodeURIComponent(JSON.stringify(usuario))}; path=/; max-age=3600`;
     }
+
+    // redireciona pra tela principal já logada
+    window.location.href = "../3TelaPrincipal/menu.html";
+  }
 })
-
-
 .catch(err => {
-    console.error("Erro ao cadastrar:", err);
-    alert("Erro de conexão com o servidor.");
- });
+  console.error("Erro ao cadastrar:", err);
+  alert("Erro de conexão com o servidor.");
 });
-
+});
 
 btnLogin.addEventListener("click", () => {
     // Redireciona para a página de login
