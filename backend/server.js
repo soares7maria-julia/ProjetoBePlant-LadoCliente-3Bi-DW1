@@ -1,12 +1,70 @@
 const express = require('express');
-const app = express();
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 
-const cookieParser = require('cookie-parser');
+const app = express();
+
+// 🔧 Habilita CORS ANTES de tudo
+/*
+app.use(cors({
+  origin: ['http://127.0.0.1:5502', 'http://localhost:5502'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+*/
+
+
+
+
+
+
+app.use((req, res, next) => {
+  const allowedOrigins = [
+    'http://127.0.0.1:5500',
+    'http://localhost:5501',
+    'http://127.0.0.1:5501',
+    'http://localhost:5502',
+    'http://127.0.0.1:5502',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'null'
+  ];
+
+  const origin = req.headers.origin;
+  console.log('Origin recebido:', origin); // 👈 ajuda a depurar
+
+  if (allowedOrigins.includes(origin) || !origin) {
+    // 👇 Garante que o navegador receba o cabeçalho
+    res.header('Access-Control-Allow-Origin', origin || '*');
+  }
+
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+
+  if (req.method === 'OPTIONS') {
+    // 👇 precisa encerrar a requisição aqui
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
+
+// 🔧 Middleware pra JSON (algumas versões do Express precisam)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Configurações de pasta
+app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use(cookieParser());
+
 
 // Importar a configuração do banco PostgreSQL
 ////// Tirar de comentario depois 
-/* const db = require('./database'); // Ajuste o caminho conforme necessário */
+const db = require('./database'); // Ajuste o caminho conforme necessário 
 //////
 
 // Configurações do servidor - quando em produção, você deve substituir o IP e a porta pelo do seu servidor remoto
@@ -23,50 +81,6 @@ app.use(express.static(caminhoFrontend));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use(cookieParser());
-
-// Middleware para permitir CORS (Cross-Origin Resource Sharing)
-app.use((req, res, next) => {
-  const allowedOrigins = [
-    'http://127.0.0.1:5500',
-    'http://localhost:5500',
-    'http://127.0.0.1:5501',
-    'http://localhost:3000',
-    'http://localhost:3001'
-  ];
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  res.header('Access-Control-Allow-Credentials', 'true');
-
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200); // <-- responde ao preflight
-  }
-
-  next();
-});
-
-// Middleware para adicionar a instância do banco de dados às requisições (desativado)
-// app.use((req, res, next) => {
-//   req.db = db;
-//   next();
-// });
-
-// Middlewares
-app.use(express.json());
-
-// Middleware de tratamento de erros JSON malformado
-app.use((err, req, res, next) => {
-  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
-    return res.status(400).json({
-      error: 'JSON malformado',
-      message: 'Verifique a sintaxe do JSON enviado'
-    });
-  }
-  next(err);
-});
 
 // só mexa nessa parte
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,8 +122,8 @@ app.use("/api/carrinho", carrinhoRoutes);
 // Rota padrão
 app.get('/', (req, res) => {
   res.json({
-    message: 'O server está funcionando - essa é a rota raiz!',
-    database: 'DESATIVADO (sem PostgreSQL)',
+    message: 'O server está funcionando - e o PostgreSQL está conectado!',
+    database: 'Ativo',
     timestamp: new Date().toISOString()
   });
 });

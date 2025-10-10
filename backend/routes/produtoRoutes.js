@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     // usa o id do produto + extensão original
-    const id = req.body.idItem || req.params.id;
+    const id = req.body.iditem || req.params.id;
     const ext = path.extname(file.originalname);
     cb(null, `${id}${ext}`); // ex: 3.jpeg
   }
@@ -23,8 +23,8 @@ const upload = multer({ storage });
 // Rotas de CRUD para produtos
 router.get('/', produtoController.listarProdutos);
 router.get('/:id', produtoController.obterProduto);
-router.post('/', upload.single('imagem'), produtoController.criarProduto);
-router.put('/:id', upload.single('imagem'), produtoController.atualizarProduto);
+router.post('/', upload.single('imagemitem'), produtoController.criarProduto);
+router.put('/:id', upload.single('imagemitem'), produtoController.atualizarProduto);
 router.delete('/:id', produtoController.deletarProduto);
 
 module.exports = router;

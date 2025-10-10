@@ -1,6 +1,7 @@
 const API_BASE_URL = 'http://localhost:3001';
 let currentProdutoId = null;
 let operacao = null;
+let currentImagemNome = null; // <-- guarda o nome do arquivo existente
 
 const form = document.getElementById('produtoForm');
 const searchId = document.getElementById('searchId');
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   carregarProdutos();
   carregarCategorias();
 
-  // 👉 Eventos de imagem só registrados uma vez
+  // Eventos para permitir colar/arrastar imagem (registrados uma vez)
   imagemInput.addEventListener('paste', (event) => {
     const items = event.clipboardData.items;
     for (let i = 0; i < items.length; i++) {
@@ -56,7 +57,7 @@ bloquearCampos(false);
 
 function mostrarMensagem(texto, tipo = 'info') {
   messageContainer.innerHTML = `<div class="message ${tipo}">${texto}</div>`;
-  setTimeout(() => { messageContainer.innerHTML = ''; }, 3001);
+  setTimeout(() => { messageContainer.innerHTML = ''; }, 3000);
 }
 
 function bloquearCampos(bloquearPrimeiro) {
@@ -67,7 +68,13 @@ function bloquearCampos(bloquearPrimeiro) {
   });
 }
 
-function limparFormulario() { form.reset(); }
+function limparFormulario() {
+  form.reset();
+  // remove preview se existir
+  const prev = document.getElementById('imagemPreview');
+  if (prev) prev.remove();
+  currentImagemNome = null;
+}
 
 function mostrarBotoes(btBuscar, btIncluir, btAlterar, btExcluir, btSalvar, btCancelar) {
   btnBuscar.style.display = btBuscar ? 'inline-block' : 'none';
@@ -83,9 +90,7 @@ async function carregarCategorias() {
     const response = await fetch(`${API_BASE_URL}/categoria`);
     if (response.ok) {
       const categorias = await response.json();
-
       selectCategoria.innerHTML = '<option value="" disabled selected> selecione uma categoria </option>';
-
       categorias.forEach(cat => {
         const option = document.createElement('option');
         option.value = cat.idcategoria;
@@ -127,9 +132,12 @@ function preencherFormulario(produto) {
   document.getElementById('nome').value = produto.nomeitem || '';
   document.getElementById('estoque').value = produto.estoqueitem || '';
   document.getElementById('valor').value = produto.valorunitario || '';
-
   selectCategoria.value = produto.idcategoria || '';
 
+  // guarda o nome da imagem corrente (se houver)
+  currentImagemNome = produto.imagemitem || null;
+
+  // exibe preview da imagem atual
   if (produto.imagemitem) {
     let preview = document.getElementById('imagemPreview');
     if (!preview) {
@@ -140,6 +148,12 @@ function preencherFormulario(produto) {
       imagemInput.insertAdjacentElement('afterend', preview);
     }
     preview.src = `${API_BASE_URL}/images/${produto.imagemitem}`;
+    preview.alt = produto.nomeitem || 'imagem do produto';
+    preview.dataset.filename = produto.imagemitem;
+  } else {
+    // se não tem imagem, remove preview se houver
+    const prev = document.getElementById('imagemPreview');
+    if (prev) prev.remove();
   }
 }
 
@@ -181,7 +195,12 @@ async function salvarOperacao() {
 
   const file = imagemInput.files[0];
   if (file) {
+    // se o usuário selecionou novo arquivo, manda ele
     formData.append('imagem', file);
+  } else if (operacao === 'alterar' && currentImagemNome) {
+    // se for alteração e NÃO houve novo arquivo, informa o nome atual para o backend
+    // assim o backend sabe para manter a imagem antiga
+    formData.append('imagemNome', currentImagemNome);
   }
 
   let url = `${API_BASE_URL}/produto`;
@@ -204,8 +223,8 @@ async function salvarOperacao() {
     if (response.ok) {
       mostrarMensagem(`Operação ${operacao} realizada com sucesso!`, 'success');
       limparFormulario();
-      carregarProdutos();
-      cancelarOperacao(); // 🔹 volta pro estado inicial
+      await carregarProdutos();
+      cancelarOperacao(); // volta pro estado inicial
     } else {
       mostrarMensagem('Erro na operação', 'error');
     }
@@ -243,7 +262,7 @@ function renderizarTabelaProdutos(produtos) {
       <td>${produto.nomeitem}</td>
       <td>${produto.estoqueitem}</td>
       <td>${produto.valorunitario}</td>
-      <td><img src="${API_BASE_URL}/images/${produto.imagemitem || ''}" 
+      <td><img src="${API_BASE_URL}/images/${produto.imagemitem || 'sem-imagem.png'}" 
                alt="Imagem" style="max-width:80px; border-radius:6px;"></td>
       <td>${produto.nomecategoria || ''}</td>
     `;

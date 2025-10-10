@@ -58,7 +58,7 @@ const query = async (text, params) => {
   const client = await pool.connect();
   try {
     // Definir o search_path antes de executar a query
-    await client.query('SET search_path TO peer, public');
+    await client.query('SET search_path TO  public');
     const result = await client.query(text, params);
     return result;
   } catch (error) {
@@ -74,7 +74,7 @@ const transaction = async (callback) => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    await client.query('SET search_path TO peer, public');
+    await client.query('SET search_path TO  public');
 
     const result = await callback(client);
 
@@ -95,3 +95,5 @@ module.exports = {
   transaction,
   testConnection
 };
+
+testConnection();
