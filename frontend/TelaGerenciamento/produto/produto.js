@@ -187,20 +187,20 @@ function excluirProduto() {
 
 async function salvarOperacao() {
   const formData = new FormData();
-  formData.append('idItem', searchId.value);
-  formData.append('nomeItem', document.getElementById('nome').value);
-  formData.append('estoqueItem', document.getElementById('estoque').value);
-  formData.append('valorUnitario', document.getElementById('valor').value);
+  formData.append('iditem', searchId.value);
+  formData.append('nomeitem', document.getElementById('nome').value);
+  formData.append('estoqueitem', document.getElementById('estoque').value);
+  formData.append('valorunitario', document.getElementById('valor').value);
   formData.append('idcategoria', document.getElementById('categoria').value);
 
   const file = imagemInput.files[0];
   if (file) {
     // se o usuário selecionou novo arquivo, manda ele
-    formData.append('imagem', file);
+    formData.append('imagemitem', file);
   } else if (operacao === 'alterar' && currentImagemNome) {
     // se for alteração e NÃO houve novo arquivo, informa o nome atual para o backend
     // assim o backend sabe para manter a imagem antiga
-    formData.append('imagemNome', currentImagemNome);
+    formData.append('imagemnome', currentImagemNome);
   }
 
   let url = `${API_BASE_URL}/produto`;

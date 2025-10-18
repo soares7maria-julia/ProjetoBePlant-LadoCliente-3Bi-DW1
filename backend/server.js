@@ -17,40 +17,34 @@ app.use(cors({
 
 
 
+const whitelist = [
+  'http://127.0.0.1:5500',
+  'http://localhost:5500',
+  'http://127.0.0.1:5501',
+  'http://localhost:5501',
+  'http://127.0.0.1:5502',
+  'http://localhost:5502',
+  'http://localhost:3001',
+  'http://127.0.0.1:3001'
+];
 
+// ⚙️ Configuração do CORS
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || whitelist.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origem não permitida pelo CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
 
+// 🧩 Aplica o CORS em todas as rotas
+app.use(cors(corsOptions));
 
-app.use((req, res, next) => {
-  const allowedOrigins = [
-    'http://127.0.0.1:5500',
-    'http://localhost:5501',
-    'http://127.0.0.1:5501',
-    'http://localhost:5502',
-    'http://127.0.0.1:5502',
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'null'
-  ];
-
-  const origin = req.headers.origin;
-  console.log('Origin recebido:', origin); // 👈 ajuda a depurar
-
-  if (allowedOrigins.includes(origin) || !origin) {
-    // 👇 Garante que o navegador receba o cabeçalho
-    res.header('Access-Control-Allow-Origin', origin || '*');
-  }
-
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-
-  if (req.method === 'OPTIONS') {
-    // 👇 precisa encerrar a requisição aqui
-    return res.sendStatus(200);
-  }
-
-  next();
-});
 
 
 // 🔧 Middleware pra JSON (algumas versões do Express precisam)
@@ -180,6 +174,7 @@ process.on('SIGTERM', async () => {
   console.log('\n🔄 SIGTERM recebido, encerrando servidor...');
   process.exit(0);
 });
+
 
 // Iniciar o servidor
 startServer();

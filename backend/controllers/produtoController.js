@@ -85,7 +85,7 @@ exports.atualizarProduto = async (req, res) => {
   try {
     const { id } = req.params;
     const { nomeitem, estoqueitem, valorunitario, idcategoria, imagemNome } = req.body;
-    const imagemitem = req.file ? req.file.filename : imagemNome || null;
+   const imagemitem = req.file ? req.file.filename : req.body.imagemnome;
 
     const sql = `
       UPDATE item

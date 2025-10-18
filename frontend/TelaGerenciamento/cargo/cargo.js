@@ -77,41 +77,13 @@ async function buscarCargo() {
   }
 }
 
+
 function preencherFormularioCargo(cargo) {
   currentCargoId = cargo.idcargo;
   searchIdCargo.value = cargo.idcargo;
   document.getElementById('nomecargo').value = cargo.nomecargo || '';
 }
 
-function excluirCargo(idcargo = currentCargoId) {
-  if (!idcargo) {
-    mostrarMensagemCargo("Nenhum cargo selecionado para exclusão.", "warning");
-    return;
-  }
-
-  if (confirm("Tem certeza que deseja excluir este cargo?")) {
-    fetch(`${API_BASE_URL}/cargo/${idcargo}`, {
-      method: "DELETE"
-    })
-    .then(res => {
-      if (res.ok) {
-        mostrarMensagemCargo("Cargo excluído com sucesso!", "success");
-        carregarCargos(); // atualiza lista
-        limparFormularioCargo();
-        mostrarBotoesCargo(true, false, false, false, false, true);
-        currentCargoId = null;
-      } else if (res.status === 404) {
-        mostrarMensagemCargo("Cargo não encontrado.", "warning");
-      } else {
-        mostrarMensagemCargo("Erro ao excluir cargo", "error");
-      }
-    })
-    .catch(err => {
-      console.error("Erro ao excluir:", err);
-      mostrarMensagemCargo("Erro de conexão ao excluir cargo", "error");
-    });
-  }
-}
 
 function incluirCargo() {
   mostrarMensagemCargo('Digite os dados!', 'info');
@@ -123,6 +95,49 @@ function incluirCargo() {
   document.getElementById('nomecargo').focus();
   operacaoCargo = 'incluir';
 }
+
+
+async function excluirCargo(idcargo = currentCargoId) {
+  // tenta pegar id a partir do parâmetro, do currentCargoId ou do campo de busca
+  const idRaw = idcargo ?? currentCargoId ?? searchIdCargo.value;
+  const id = parseInt(idRaw, 10);
+
+  if (isNaN(id)) {
+    mostrarMensagemCargo("ID inválido para exclusão.", "warning");
+    return;
+  }
+
+  if (!confirm("Tem certeza que deseja excluir este cargo?")) return;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/cargo/${id}`, { method: "DELETE" });
+
+    // Se o servidor retornar JSON, lê; senão ignora
+    let data = null;
+    const ct = res.headers.get('content-type') || '';
+    if (ct.includes('application/json')) {
+      try { data = await res.json(); } catch(e) { data = null; }
+    }
+
+    if (res.ok) {
+      mostrarMensagemCargo((data && (data.message || data.msg)) || "Cargo excluído com sucesso!", "success");
+      carregarCargos(); // atualiza lista
+      limparFormularioCargo();
+      mostrarBotoesCargo(true, false, false, false, false, true);
+      currentCargoId = null;
+    } else if (res.status === 404) {
+      mostrarMensagemCargo((data && (data.error || data.message)) || "Cargo não encontrado.", "warning");
+    } else {
+      // tenta mostrar mensagem do servidor, senão mensagem genérica
+      const serverMsg = (data && (data.error || data.message)) || `Erro ao excluir cargo (status ${res.status})`;
+      mostrarMensagemCargo(serverMsg, "error");
+    }
+  } catch (err) {
+    console.error("Erro ao excluir:", err);
+    mostrarMensagemCargo("Erro de conexão ao excluir cargo", "error");
+  }
+}
+
 
 function alterarCargo() {
   mostrarMensagemCargo('Digite os dados!', 'info');

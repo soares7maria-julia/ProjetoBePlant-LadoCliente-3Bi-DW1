@@ -75,28 +75,40 @@ exports.atualizarCargo = async (req, res) => {
   }
 };
 
-// Deletar cargo
-exports.deletarCargo = async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
 
-    // Verifica se existe
-    const existing = await query('SELECT * FROM cargo WHERE idcargo = $1', [id]);
-    if (existing.rows.length === 0) {
+// Deletar cargo (somente se não estiver em uso)
+exports.deletarCargo = async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "ID inválido" });
+  }
+
+  try {
+    // Verifica se o cargo existe
+    const existe = await query('SELECT * FROM cargo WHERE idcargo = $1', [id]);
+    if (existe.rows.length === 0) {
       return res.status(404).json({ error: 'Cargo não encontrado' });
     }
 
-    await query('DELETE FROM cargo WHERE idcargo = $1', [id]);
-    res.status(204).send();
-  } catch (error) {
-    console.error('Erro ao deletar cargo:', error);
+    // Verifica se está sendo usado em pessoa
+    const uso = await query(
+      'SELECT COUNT(*) AS total FROM funcionario WHERE idcargo = $1',
+      [id]
+    );
 
-    if (error.code === '23503') {
+    if (parseInt(uso.rows[0].total, 10) > 0) {
       return res.status(400).json({
-        error: 'Não é possível deletar cargo com dependências associadas'
+        error: 'Não é possível excluir: este cargo está sendo usado por uma pessoa.'
       });
     }
 
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    // Se não estiver em uso, deleta
+    await query('DELETE FROM cargo WHERE idcargo = $1', [id]);
+    res.status(200).json({ message: 'Cargo excluído com sucesso!' });
+
+  } catch (err) {
+    console.error('Erro ao deletar cargo:', err);
+    res.status(500).json({ error: 'Erro ao deletar cargo' });
   }
 };

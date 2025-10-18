@@ -1,0 +1,222 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 17.4
+-- Dumped by pg_dump version 17.4
+
+-- Started on 2025-10-18 20:25:10
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 4863 (class 0 OID 17161)
+-- Dependencies: 221
+-- Data for Name: cargo; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.cargo VALUES (1, 'Vendedor');
+INSERT INTO public.cargo VALUES (3, 'Atendente');
+INSERT INTO public.cargo VALUES (4, 'caixa');
+INSERT INTO public.cargo VALUES (5, 'arrumador');
+INSERT INTO public.cargo VALUES (6, 'entrevistador');
+INSERT INTO public.cargo VALUES (7, 'faxineiro');
+INSERT INTO public.cargo VALUES (2, 'Gerente 2');
+
+
+--
+-- TOC entry 4868 (class 0 OID 17190)
+-- Dependencies: 226
+-- Data for Name: item; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.item VALUES (1, 'Samambaia', 10, 25.00, 2, 'samambaia.png');
+INSERT INTO public.item VALUES (4, 'Orquídea', 8, 45.00, 4, '4.jpg');
+INSERT INTO public.item VALUES (3, 'Bonsai', 5, 120.00, 2, '3.jpeg');
+INSERT INTO public.item VALUES (9, 'Margarida amarela', 45, 47.00, 4, '9.webp');
+INSERT INTO public.item VALUES (11, 'flor de Lotus', 72, 60.00, 4, '11.jpg');
+INSERT INTO public.item VALUES (12, 'cacto', 22, 30.00, 2, '6.png');
+INSERT INTO public.item VALUES (7, 'Costela-de-Adão', 40, 40.00, 1, '7.png');
+INSERT INTO public.item VALUES (5, 'Planta Jade 72', 15, 60.00, 4, 'jade.webp');
+INSERT INTO public.item VALUES (13, 'lirio 2', 50, 60.00, 4, '14.png');
+
+
+--
+-- TOC entry 4860 (class 0 OID 17142)
+-- Dependencies: 218
+-- Data for Name: pessoa; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.pessoa VALUES (1, '111.111.111-11', 'Maria Silva', 'maria@email.com', 'senha1', 'Rua das Flores, 123');
+INSERT INTO public.pessoa VALUES (4, '444.444.444-44', 'Carlos Lima Marino', 'carlos@email.com', '', 'casa azul');
+INSERT INTO public.pessoa VALUES (9, '444.444.448', 'beaa', 'beaa88@gmail.com', '0000', 'casa azul');
+INSERT INTO public.pessoa VALUES (3, '333.333.333-33', 'Ana Costa', 'ana@email.com', '', 'Rua Verde, 789');
+INSERT INTO public.pessoa VALUES (6, '98765432100', 'Ana Souza Silva', 'ana.silva@email.com', '', 'Rua Central, 45 - Apto 10');
+INSERT INTO public.pessoa VALUES (17, '44444777744', 'thaisinha', 'thaisinhanovo@gmail.com', 'abc123', 'casa azul frango');
+INSERT INTO public.pessoa VALUES (18, '99911122244', 'ananda', 'anaa@gmail.com', '99997777', 'rua amarela');
+INSERT INTO public.pessoa VALUES (19, '12345678900', 'maju', 'maju@gmail.com', 'maju123', 'rua das arvores');
+INSERT INTO public.pessoa VALUES (2, '222.222.222-22', 'João Souza da silva', 'joao@email.com', '', 'casa rosa');
+INSERT INTO public.pessoa VALUES (20, '11122233344', 'mia silva', 'mia123@gmail.com', '', 'rua das capivaras');
+INSERT INTO public.pessoa VALUES (15, '33333999999', 'radames new', 'radamesrj99@gmail.com', 'radames123', 'casa azul');
+INSERT INTO public.pessoa VALUES (7, '55555555555', 'Madalena Cuks', 'madalena55.gmail.com', '', 'casa vermelha');
+INSERT INTO public.pessoa VALUES (40, '88877766690', 'alice silva', 'alicesilva@gmail.com', '123', 'rua com arvores');
+INSERT INTO public.pessoa VALUES (35, '77722233366', 'lara', 'lara@gmail.com', '', 'rua amarela dos campos');
+INSERT INTO public.pessoa VALUES (43, '77722234355', 'lara', 'lara@gmail.com', '1234', 'rua 8');
+
+
+--
+-- TOC entry 4874 (class 0 OID 17256)
+-- Dependencies: 232
+-- Data for Name: carrinho_item; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.carrinho_item VALUES (13, 18, 5, 2, '2025-09-29 21:22:47.553842');
+INSERT INTO public.carrinho_item VALUES (17, 18, 7, 1, '2025-10-02 11:18:07.748691');
+
+
+--
+-- TOC entry 4866 (class 0 OID 17183)
+-- Dependencies: 224
+-- Data for Name: categoria; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.categoria VALUES (1, 'Plantas Ornamentais');
+INSERT INTO public.categoria VALUES (4, 'Flores');
+INSERT INTO public.categoria VALUES (2, 'Suculentas');
+INSERT INTO public.categoria VALUES (3, 'Árvores verdes');
+
+
+--
+-- TOC entry 4861 (class 0 OID 17150)
+-- Dependencies: 219
+-- Data for Name: cliente; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.cliente VALUES (1, '2025-01-10');
+INSERT INTO public.cliente VALUES (2, '2025-02-15');
+INSERT INTO public.cliente VALUES (9, '2025-09-22');
+INSERT INTO public.cliente VALUES (18, '2025-09-26');
+INSERT INTO public.cliente VALUES (19, '2025-09-29');
+INSERT INTO public.cliente VALUES (40, '2025-10-18');
+INSERT INTO public.cliente VALUES (35, '2025-10-18');
+
+
+--
+-- TOC entry 4864 (class 0 OID 17167)
+-- Dependencies: 222
+-- Data for Name: funcionario; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.funcionario VALUES (3, 2500.00, 1);
+INSERT INTO public.funcionario VALUES (4, 4000.00, 2);
+INSERT INTO public.funcionario VALUES (6, 7000.00, 3);
+INSERT INTO public.funcionario VALUES (17, 2000.00, 5);
+INSERT INTO public.funcionario VALUES (2, 20000.00, 2);
+INSERT INTO public.funcionario VALUES (20, 3000.00, 1);
+INSERT INTO public.funcionario VALUES (15, 3000.00, 2);
+INSERT INTO public.funcionario VALUES (7, 9000.00, 6);
+INSERT INTO public.funcionario VALUES (43, 80000.00, 5);
+
+
+--
+-- TOC entry 4870 (class 0 OID 17202)
+-- Dependencies: 228
+-- Data for Name: pedido; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.pedido VALUES (1, '2025-09-01', 1, 50.00);
+INSERT INTO public.pedido VALUES (2, '2025-09-05', 2, 120.00);
+INSERT INTO public.pedido VALUES (3, '2025-09-10', 1, 45.00);
+INSERT INTO public.pedido VALUES (4, '2025-09-12', 2, 135.00);
+
+
+--
+-- TOC entry 4871 (class 0 OID 17213)
+-- Dependencies: 229
+-- Data for Name: pedido_item; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.pedido_item VALUES (1, 1, 2, 25.00);
+INSERT INTO public.pedido_item VALUES (2, 3, 1, 120.00);
+
+
+--
+-- TOC entry 4872 (class 0 OID 17228)
+-- Dependencies: 230
+-- Data for Name: pedidopago; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.pedidopago VALUES (1, 1, '2025-09-02', 50.00);
+INSERT INTO public.pedidopago VALUES (2, 2, '2025-09-06', 120.00);
+
+
+--
+-- TOC entry 4880 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: cargo_idcargo_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.cargo_idcargo_seq', 4, true);
+
+
+--
+-- TOC entry 4881 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: carrinho_item_idcarrinho_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.carrinho_item_idcarrinho_seq', 36, true);
+
+
+--
+-- TOC entry 4882 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: categoria_idcategoria_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.categoria_idcategoria_seq', 4, true);
+
+
+--
+-- TOC entry 4883 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: item_iditem_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.item_iditem_seq', 13, true);
+
+
+--
+-- TOC entry 4884 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: pedido_idpedido_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.pedido_idpedido_seq', 4, true);
+
+
+--
+-- TOC entry 4885 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: pessoa_idpessoa_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.pessoa_idpessoa_seq', 43, true);
+
+
+-- Completed on 2025-10-18 20:25:10
+
+--
+-- PostgreSQL database dump complete
+--
+
