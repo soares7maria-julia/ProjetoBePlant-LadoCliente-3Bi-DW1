@@ -1,0 +1,79 @@
+CREATE TABLE cargo (
+    idcargo SERIAL PRIMARY KEY,
+    nomecargo VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE categoria (
+    idcategoria SERIAL PRIMARY KEY,
+    nomecategoria VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE pessoa (
+    idpessoa SERIAL PRIMARY KEY,
+    cpfpessoa VARCHAR(14) UNIQUE NOT NULL,
+    nomepessoa VARCHAR(100) NOT NULL,
+    emailpessoa VARCHAR(100) NOT NULL,
+    senhapessoa VARCHAR(100) NOT NULL,
+    enderecopessoa VARCHAR(150)
+);
+
+CREATE TABLE cliente (
+    idpessoa INTEGER PRIMARY KEY,
+    datacadastro DATE NOT NULL,
+    FOREIGN KEY (idpessoa) REFERENCES pessoa(idpessoa) ON DELETE CASCADE
+);
+
+CREATE TABLE funcionario (
+    idpessoa INTEGER PRIMARY KEY,
+    salario NUMERIC(10,2) NOT NULL,
+    fkcargo INTEGER NOT NULL,
+    FOREIGN KEY (idpessoa) REFERENCES pessoa(idpessoa) ON DELETE CASCADE,
+    FOREIGN KEY (fkcargo) REFERENCES cargo(idcargo)
+);
+
+CREATE TABLE item (
+    iditem SERIAL PRIMARY KEY,
+    nomeitem VARCHAR(100) NOT NULL,
+    estoqueitem INTEGER NOT NULL,
+    valorunitario NUMERIC(10,2) NOT NULL,
+    idcategoria INTEGER,
+    imagemitem TEXT,
+    FOREIGN KEY (idcategoria) REFERENCES categoria(idcategoria)
+);
+
+CREATE TABLE carrinho_item (
+    idcarrinho SERIAL PRIMARY KEY,
+    idpessoa INTEGER NOT NULL,
+    iditem INTEGER NOT NULL,
+    quantidade INTEGER DEFAULT 1 NOT NULL,
+    dataadicionado TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idpessoa) REFERENCES pessoa(idpessoa) ON DELETE CASCADE,
+    FOREIGN KEY (iditem) REFERENCES item(iditem) ON DELETE CASCADE
+);
+
+CREATE TABLE pedido (
+    idpedido SERIAL PRIMARY KEY,
+    datapedido DATE NOT NULL,
+    idpessoa INTEGER NOT NULL,
+    valortotal NUMERIC(10,2),
+    FOREIGN KEY (idpessoa) REFERENCES cliente(idpessoa)
+);
+
+CREATE TABLE pedido_item (
+    idpedido INTEGER NOT NULL,
+    iditem INTEGER NOT NULL,
+    quantidade INTEGER NOT NULL,
+    valorunitario NUMERIC(10,2) NOT NULL,
+    PRIMARY KEY (idpedido, iditem),
+    FOREIGN KEY (idpedido) REFERENCES pedido(idpedido),
+    FOREIGN KEY (iditem) REFERENCES item(iditem)
+);
+
+CREATE TABLE pedidopago (
+    idpedido INTEGER PRIMARY KEY,
+    idpessoa INTEGER NOT NULL,
+    datapagamento DATE NOT NULL,
+    valortotal NUMERIC(10,2) NOT NULL,
+    FOREIGN KEY (idpedido) REFERENCES pedido(idpedido),
+    FOREIGN KEY (idpessoa) REFERENCES pessoa(idpessoa)
+);
