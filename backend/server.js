@@ -16,7 +16,7 @@ app.use(cors({
 */
 
 
-
+// ⚙️ Configuração do CORS
 const whitelist = [
   'http://127.0.0.1:5500',
   'http://localhost:5500',
@@ -28,23 +28,13 @@ const whitelist = [
   'http://127.0.0.1:3001'
 ];
 
-// ⚙️ Configuração do CORS
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || whitelist.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Origem não permitida pelo CORS'));
-    }
-  },
+
+// 👉 Libera TUDO temporariamente (para ambiente local)
+app.use(cors({
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-};
-
-// 🧩 Aplica o CORS em todas as rotas
-app.use(cors(corsOptions));
-
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 
 // 🔧 Middleware pra JSON (algumas versões do Express precisam)

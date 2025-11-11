@@ -44,11 +44,10 @@ async function adicionarAoCarrinho(iditem) {
   }
 }
 
-// ===== Atualizar quantidade (PUT) =====
-async function atualizarQuantidade(idcarrinho, quantidade) {
+// ===== Atualizar quantidade =====
+async function atualizarQuantidade(idcarrinho, novaQtd) {
   try {
-    // Se quantidade for 0, removemos
-    if (quantidade <= 0) {
+    if (novaQtd <= 0) {
       await removerItem(idcarrinho);
       return;
     }
@@ -56,20 +55,37 @@ async function atualizarQuantidade(idcarrinho, quantidade) {
     const resp = await fetch(`${API_URL}/${idcarrinho}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ quantidade })
+      body: JSON.stringify({ quantidade: novaQtd })
     });
 
-    if (!resp.ok) {
-      // tenta ler mensagem do servidor
-      const txt = await resp.text();
-      throw new Error(`Erro ao atualizar quantidade: ${txt}`);
-    }
+    if (!resp.ok) throw new Error("Erro ao atualizar quantidade");
 
-    await carregarCarrinho();
+    // Atualiza apenas o valor mostrado, sem recarregar tudo
+    const itemEl = document.querySelector(`.carrinho-item[data-id="${idcarrinho}"]`);
+    if (itemEl) {
+      const qtdSpan = itemEl.querySelector(".q-value");
+      qtdSpan.textContent = novaQtd;
+
+      const preco = parseFloat(itemEl.dataset.preco);
+      itemEl.querySelector(".subtotal").textContent = `R$ ${(preco * novaQtd).toFixed(2)}`;
+
+      atualizarTotal();
+    }
   } catch (err) {
     console.error("Erro ao atualizar quantidade:", err);
     alert("Erro ao atualizar quantidade do item.");
   }
+}
+
+// ===== Atualizar total =====
+function atualizarTotal() {
+  let total = 0;
+  document.querySelectorAll(".carrinho-item").forEach(div => {
+    const preco = parseFloat(div.dataset.preco);
+    const qtd = parseInt(div.querySelector(".q-value").textContent, 10);
+    total += preco * qtd;
+  });
+  document.getElementById("carrinho-total").textContent = total.toFixed(2);
 }
 
 // ===== Carregar carrinho =====
@@ -90,7 +106,6 @@ async function carregarCarrinho() {
     if (!resp.ok) throw new Error("Erro ao carregar carrinho");
 
     const carrinho = await resp.json();
-
     if (!carrinho || carrinho.length === 0) {
       containerItens.innerHTML = `<p class="carrinho-vazio">O carrinho está vazio.</p>`;
       totalSpan.textContent = "0.00";
@@ -105,8 +120,9 @@ async function carregarCarrinho() {
 
       const div = document.createElement("div");
       div.classList.add("carrinho-item");
+      div.dataset.id = item.idcarrinho;
+      div.dataset.preco = preco;
 
-      // controle de quantidade com botões + e -
       div.innerHTML = `
         <img src="http://localhost:3001/images/${item.imagem || 'sem-imagem.png'}" alt="${item.nome}">
         <div class="info">
@@ -114,64 +130,45 @@ async function carregarCarrinho() {
           <p>R$ ${preco.toFixed(2)}</p>
         </div>
 
-        <div class="quantidade" data-id="${item.idcarrinho}">
-          <button class="q-decrease" aria-label="Diminuir quantidade" data-id="${item.idcarrinho}">−</button>
+        <div class="quantidade">
+          <button class="q-decrease">−</button>
           <span class="q-value">${qtd}</span>
-          <button class="q-increase" aria-label="Aumentar quantidade" data-id="${item.idcarrinho}">+</button>
+          <button class="q-increase">+</button>
         </div>
 
-        <button class="remover-btn" data-id="${item.idcarrinho}" title="Remover item">✖</button>
+        <p class="subtotal">R$ ${(preco * qtd).toFixed(2)}</p>
+        <button class="remover-btn">✖</button>
       `;
+
+      // Eventos locais
+      const btnMais = div.querySelector(".q-increase");
+      const btnMenos = div.querySelector(".q-decrease");
+      const btnRemover = div.querySelector(".remover-btn");
+
+      btnMais.addEventListener("click", async () => {
+        const atual = parseInt(div.querySelector(".q-value").textContent, 10);
+        await atualizarQuantidade(item.idcarrinho, atual + 1);
+      });
+
+      btnMenos.addEventListener("click", async () => {
+        const atual = parseInt(div.querySelector(".q-value").textContent, 10);
+        if (atual <= 1) {
+          if (confirm("Deseja remover este item?")) await removerItem(item.idcarrinho);
+        } else {
+          await atualizarQuantidade(item.idcarrinho, atual - 1);
+        }
+      });
+
+      btnRemover.addEventListener("click", async () => {
+        if (confirm("Remover item do carrinho?")) {
+          await removerItem(item.idcarrinho);
+        }
+      });
 
       containerItens.appendChild(div);
     });
 
     totalSpan.textContent = total.toFixed(2);
-
-    // listeners para remover
-    containerItens.querySelectorAll(".remover-btn").forEach(btn => {
-      btn.addEventListener("click", async (e) => {
-        const idcarrinho = e.currentTarget.dataset.id;
-        if (confirm("Remover item do carrinho?")) {
-          await removerItem(idcarrinho);
-        }
-      });
-    });
-
-    // listeners para aumentar/diminuir
-    containerItens.querySelectorAll(".q-increase").forEach(btn => {
-      btn.addEventListener("click", async (e) => {
-        const idcarrinho = e.currentTarget.dataset.id;
-        // pega o span da quantidade atual
-        const wrapper = e.currentTarget.closest(".quantidade");
-        const span = wrapper.querySelector(".q-value");
-        const atual = parseInt(span.textContent, 10);
-        const nova = atual + 1;
-        // envia para o servidor
-        await atualizarQuantidade(idcarrinho, nova);
-      });
-    });
-
-    containerItens.querySelectorAll(".q-decrease").forEach(btn => {
-      btn.addEventListener("click", async (e) => {
-        const idcarrinho = e.currentTarget.dataset.id;
-        const wrapper = e.currentTarget.closest(".quantidade");
-        const span = wrapper.querySelector(".q-value");
-        const atual = parseInt(span.textContent, 10);
-
-        if (atual <= 1) {
-          // se quiser apagar quando for 1 -> 0, pede confirmação
-          if (confirm("Quantidade vai ficar 0. Deseja remover o item?")) {
-            await removerItem(idcarrinho);
-          }
-          return;
-        }
-
-        const nova = atual - 1;
-        await atualizarQuantidade(idcarrinho, nova);
-      });
-    });
-
   } catch (err) {
     console.error("Erro ao carregar carrinho:", err);
     containerItens.innerHTML = `<p class="carrinho-vazio">Erro ao carregar carrinho.</p>`;
@@ -184,10 +181,32 @@ async function removerItem(idcarrinho) {
   try {
     const resp = await fetch(`${API_URL}/${idcarrinho}`, { method: "DELETE" });
     if (!resp.ok) throw new Error("Erro ao remover item");
-    await carregarCarrinho();
+    const div = document.querySelector(`.carrinho-item[data-id="${idcarrinho}"]`);
+    if (div) div.remove();
+    atualizarTotal();
   } catch (err) {
     console.error("Erro ao remover item:", err);
     alert("Erro ao remover o item do carrinho.");
+  }
+}
+
+// ===== Limpar carrinho =====
+async function limparCarrinho() {
+  const idpessoa = getIdPessoa();
+  if (!idpessoa) {
+    alert("Nenhum carrinho para limpar (faça login).");
+    return;
+  }
+  if (!confirm("Tem certeza que deseja limpar todo o carrinho?")) return;
+
+  try {
+    const resp = await fetch(`${API_URL}/pessoa/${idpessoa}`, { method: "DELETE" });
+    if (!resp.ok) throw new Error("Erro ao limpar carrinho");
+    document.getElementById("carrinho-itens").innerHTML = `<p class="carrinho-vazio">O carrinho está vazio.</p>`;
+    document.getElementById("carrinho-total").textContent = "0.00";
+  } catch (err) {
+    console.error("Erro ao limpar carrinho:", err);
+    alert("Erro ao limpar carrinho.");
   }
 }
 
@@ -206,12 +225,6 @@ async function finalizarCompra() {
     console.error("Erro ao finalizar compra:", err);
     alert("Erro ao finalizar compra!");
   }
-}
-
-// ===== Logout (limpa carrinho + cookie) =====
-async function logoutCarrinho() {
-  document.cookie = "usuarioLogado=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  window.location.href = "../1LoginCliente/login.html";
 }
 
 // ===== Inicialização =====
@@ -236,7 +249,11 @@ function inicializarCarrinho() {
   });
 
   finalizarBtn.addEventListener("click", finalizarCompra);
+
+   const limparBtn = document.getElementById("limpar-carrinho");
+  if (limparBtn) limparBtn.addEventListener("click", limparCarrinho);
+
 }
 
-// Chamar assim que a página carregar
+// Chamar ao carregar página
 window.onload = inicializarCarrinho;
