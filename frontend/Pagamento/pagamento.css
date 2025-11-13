@@ -1,0 +1,115 @@
+/* ============================
+      ESTILO BEPLANT AJUSTADO
+=============================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #e1f3ee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+}
+
+/* Card Central */
+.container {
+  background: #ffffff;
+  width: 480px; /* AUMENTADO */
+  padding: 40px 45px; /* AUMENTADO */
+  border-radius: 22px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+  text-align: center;
+}
+
+/* Título */
+h1 {
+  font-size: 28px; /* AUMENTADO */
+  font-weight: 600;
+  color: #2a7a5f;
+  margin-bottom: 14px;
+}
+
+/* Texto do valor */
+p {
+  font-size: 16px; /* AUMENTADO */
+  color: #4b4b4b;
+  margin-bottom: 22px;
+}
+
+/* Labels */
+label {
+  text-align: left;
+  display: block;
+  font-size: 15px; /* AUMENTADO */
+  color: #2f2f2f;
+  margin-bottom: 6px;
+  margin-top: 14px;
+}
+
+/* Inputs */
+input, select {
+  width: 100%;
+  padding: 14px; /* AUMENTADO */
+  border: 2px solid #b7e3d6;
+  border-radius: 15px;
+  background: #f7ffff;
+  font-size: 15px; /* AUMENTADO */
+  outline: none;
+  transition: 0.2s;
+}
+
+input:focus, select:focus {
+  border-color: #7bc9af;
+  box-shadow: 0 0 6px rgba(123, 201, 175, 0.5);
+}
+
+/* Linha mês/ano */
+.expiracao {
+  display: flex;
+  gap: 14px; /* um pouco maior */
+}
+
+/* Botões */
+.botoes {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 28px;
+}
+
+button {
+  padding: 14px 28px; /* AUMENTADO */
+  border-radius: 22px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px; /* AUMENTADO */
+  transition: 0.25s ease-in-out;
+}
+
+/* Botão Voltar */
+.voltar {
+  background: #dfeee9;
+  color: #2d6b5f;
+  border: 1px solid #9ad2c2;
+}
+
+.voltar:hover {
+  background: #cfe3dc;
+}
+
+/* Botão Finalizar */
+.finalizar {
+  background: linear-gradient(to right, #5fc9a6, #2ea88a);
+  color: white;
+  box-shadow: 0 4px 14px rgba(46, 168, 138, 0.3);
+}
+
+.finalizar:hover {
+  opacity: 0.9;
+}

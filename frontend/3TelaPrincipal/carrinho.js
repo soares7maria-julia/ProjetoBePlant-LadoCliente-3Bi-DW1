@@ -217,15 +217,22 @@ async function finalizarCompra() {
     alert("Você precisa estar logado para finalizar a compra!");
     return;
   }
-  try {
-    await fetch(`${API_URL}/pessoa/${idpessoa}`, { method: "DELETE" });
-    await carregarCarrinho();
-    alert("Compra finalizada com sucesso!");
-  } catch (err) {
-    console.error("Erro ao finalizar compra:", err);
-    alert("Erro ao finalizar compra!");
-  }
+
+  // pega o total atual do carrinho
+  const total = document.getElementById("carrinho-total").textContent;
+
+  // salva o total em cookie (dura 1 hora)
+  document.cookie = `valorCompra=${total}; path=/; max-age=3600`;
+
+  // fecha modal
+  document.getElementById("carrinho-modal").style.display = "none";
+
+  // redireciona corretamente
+  
+window.location.href = "../Pagamento/pagamento.html";
+
 }
+
 
 // ===== Inicialização =====
 function inicializarCarrinho() {

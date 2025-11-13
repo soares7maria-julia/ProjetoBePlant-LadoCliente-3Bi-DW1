@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pagamento - BePlant</title>
+  <link rel="stylesheet" href="pagamento.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Pagamento</h1>
+
+    <p id="valorCompra">Valor da compra não encontrado.</p>
+
+    <form id="formPagamento">
+      <label for="numeroCartao">Número do cartão</label>
+      <input type="text" id="numeroCartao" placeholder="0000 0000 0000 0000" maxlength="19" required>
+
+      <label for="nomeCartao">Nome do cartão</label>
+      <input type="text" id="nomeCartao" placeholder="Nome impresso" required>
+
+      <label for="dataExpiracao">Data de expiração</label>
+      <div class="expiracao">
+        <select id="mesExpiracao" required>
+          <option value="">Mês</option>
+          <option>01</option><option>02</option><option>03</option><option>04</option>
+          <option>05</option><option>06</option><option>07</option><option>08</option>
+          <option>09</option><option>10</option><option>11</option><option>12</option>
+        </select>
+        <select id="anoExpiracao" required>
+          <option value="">Ano</option>
+        </select>
+      </div>
+
+      <label for="cvv">Código de segurança (CVV)</label>
+      <input type="text" id="cvv" placeholder="123" maxlength="4" required>
+
+      <div class="botoes">
+        <button type="button" class="voltar" onclick="window.history.back()">&lt; Voltar</button>
+        <button type="submit" class="finalizar">Finalizar</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="pagamento.js"></script>
+</body>
+</html>
