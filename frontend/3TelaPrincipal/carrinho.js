@@ -229,7 +229,7 @@ async function finalizarCompra() {
 
   // redireciona corretamente
   
-window.location.href = "../Pagamento/pagamento.html";
+window.location.href = "../Pagamento/finalizar_pedido.html";
 
 }
 

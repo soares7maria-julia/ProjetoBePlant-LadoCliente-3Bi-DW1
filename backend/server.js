@@ -99,6 +99,9 @@ app.use('/produto', produtoRoutes);
 const carrinhoRoutes = require("./routes/carrinhoRoutes");
 app.use("/api/carrinho", carrinhoRoutes);
 
+const finalizar_pedidoRoutes = require("./routes/finalizar_pedidoRoutes");
+app.use("/api/finalizar", finalizar_pedidoRoutes);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -128,7 +131,7 @@ app.use((err, req, res, next) => {
 
 
 // Middleware para rotas não encontradas (404)
-app.use('', (req, res) => {
+app.use((req, res) => {
   res.status(404).json({
     error: 'Rota não encontrada',
     message: `A rota ${req.originalUrl} não existe`,

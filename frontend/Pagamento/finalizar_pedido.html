@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finalizar Pedido - BePlant</title>
+  <link rel="stylesheet" href="finalizar_pedido.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- LISTA DE PRODUTOS -->
+    <div class="card produtos-card">
+      <h2>Resumo dos Produtos</h2>
+      <div id="lista-produtos"></div>
+    </div>
+
+    <!-- RESUMO E PAGAMENTO -->
+    <div class="card resumo-card">
+      <h2>Resumo do Pedido</h2>
+      <p>Subtotal: <span id="subtotal">R$ 0,00</span></p>
+      <p class="total-area">Total: <span id="total">R$ 0,00</span></p>
+
+      <div class="pagamento-section">
+        <h3>Informações de Pagamento</h3>
+
+        <label for="cpfCliente">CPF do Cliente</label>
+        <input type="text" id="cpfCliente" placeholder="000.000.000-00" />
+
+        <label for="formaPagamento">Forma de Pagamento</label>
+        <select id="formaPagamento"></select>
+
+      </div>
+
+      <button class="btn" id="btnFinalizar">Confirmar Pedido</button>
+    </div>
+
+  </div>
+
+  <script src="finalizar_pedido.js"></script>
+</body>
+</html>

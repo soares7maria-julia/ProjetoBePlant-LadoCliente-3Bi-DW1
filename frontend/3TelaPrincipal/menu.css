@@ -15,7 +15,7 @@ body {
 /* Cabeçalho Principal */
 .header {
   position: relative;
-  background: linear-gradient(135deg, #34cfa1, #80cbb8);
+  background: linear-gradient(135deg, #248a74, #80cbb8);
   color: white;
   padding: 1rem 0;
   box-shadow: 0 5px 15px rgba(0,0,0,0.15);

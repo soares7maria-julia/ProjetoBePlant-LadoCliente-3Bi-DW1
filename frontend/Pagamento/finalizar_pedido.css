@@ -1,0 +1,164 @@
+/* =============================
+   ESTILO BEPLANT - FINALIZAR PEDIDO
+   ============================= */
+
+/* Variáveis de Cores e Estilos do BePlant */
+:root {
+  /* Cores */
+  --beplant-green-dark: #38a3a5; /* Verde/Teal Escuro (Header, Títulos) */
+  --beplant-green-medium: #48c9b0; /* Verde Médio (Botão Principal) */
+  --beplant-green-light: #e0f7f7; /* Fundo principal */
+  --beplant-text-dark: #2d3436; /* Cor do texto principal */
+  --beplant-card-bg: #ffffff; /* Fundo do Card */
+  --beplant-border-light: #e0e0e0; /* Borda clara para inputs e separadores */
+  --beplant-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra sutil do card */
+
+  /* Estilos */
+  --card-radius: 20px;
+  --input-radius: 10px;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: var(--beplant-green-light);
+  color: var(--beplant-text-dark);
+}
+
+/* Container geral */
+.container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 20px;
+  display: flex;
+  gap: 25px;
+}
+
+.card {
+  background: var(--beplant-card-bg);
+  padding: 25px;
+  border-radius: var(--card-radius);
+  box-shadow: var(--beplant-shadow);
+  transition: 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.produtos-card {
+  flex: 2;
+}
+
+.resumo-card {
+  flex: 1;
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+}
+
+/* Títulos */
+h2, h3 {
+  color: var(--beplant-green-dark);
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+/* Produtos (Mantido o estilo base, mas ajustado para as novas variáveis) */
+.produto-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--beplant-border-light);
+}
+
+.produto-info {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.produto-img {
+  width: 75px;
+  height: 75px;
+  background: var(--beplant-green-light); /* Usando a cor de fundo clara para o placeholder */
+  border-radius: var(--input-radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: var(--beplant-text-dark);
+  font-weight: bold;
+}
+
+/* Total */
+.total-area {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 15px;
+  color: var(--beplant-green-dark); /* Usando o verde escuro do BePlant */
+}
+
+/* Inputs */
+label {
+  font-weight: 600;
+  display: block;
+  margin-top: 15px; /* Aumentei a margem para melhor espaçamento */
+  margin-bottom: 5px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--beplant-border-light);
+  border-radius: var(--input-radius);
+  background: var(--beplant-card-bg); /* Fundo branco para inputs */
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--beplant-green-medium);
+  box-shadow: 0 0 0 2px rgba(72, 201, 176, 0.25); /* Sombra verde sutil no foco */
+  outline: none;
+}
+
+textarea {
+  height: 90px;
+  resize: none;
+}
+
+/* Botão */
+.btn {
+  padding: 16px; /* Aumentei o padding para o botão principal */
+  width: 100%;
+  border: none;
+  border-radius: var(--input-radius);
+  background: var(--beplant-green-medium);
+  color: white;
+  font-size: 18px; /* Aumentei a fonte */
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+  margin-top: 30px; /* Aumentei a margem superior */
+  letter-spacing: 0.5px;
+}
+
+.btn:hover {
+  background: var(--beplant-green-dark);
+  transform: scale(1.01);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    margin: 20px auto;
+    padding: 10px;
+  }
+  .card {
+    padding: 20px;
+  }
+}
