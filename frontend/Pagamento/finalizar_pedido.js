@@ -21,6 +21,8 @@ function getIdPessoa() {
 
 // ===== CARREGAR ITENS DO CARRINHO =====
 async function carregarProdutos() {
+  console.log("🔥 carregarProdutos FOI EXECUTADA");
+
   const idpessoa = getIdPessoa();
   if (!idpessoa) {
     alert("Você precisa estar logado!");
@@ -36,22 +38,23 @@ async function carregarProdutos() {
   let subtotal = 0;
 
   itens.forEach(item => {
-    const totalItem = item.preco * item.quantidade;
-    subtotal += totalItem;
+   const preco = Number(item.valorunitario);
+const totalItem = preco * item.quantidade;
+subtotal += totalItem;
 
-    lista.innerHTML += `
-      <div class="produto-item">
-        <div class="produto-info">
-          <img src="http://localhost:3001/images/${item.imagem}" class="produto-img">
-          <div>
-            <strong>${item.nome}</strong><br>
-            R$ ${item.preco.toFixed(2)} x ${item.quantidade}
-          </div>
-        </div>
-
-        <div><strong>R$ ${totalItem.toFixed(2)}</strong></div>
+lista.innerHTML += `
+  <div class="produto-item">
+    <div class="produto-info">
+      <img src="http://localhost:3001/images/${item.imagemitem}" class="produto-img">
+      <div>
+        <strong>${item.nomeitem}</strong><br>
+        R$ ${preco.toFixed(2)} x ${item.quantidade}
       </div>
-    `;
+    </div>
+
+    <div><strong>R$ ${totalItem.toFixed(2)}</strong></div>
+  </div>
+`;
   });
 
   document.getElementById("subtotal").innerText = `R$ ${subtotal.toFixed(2)}`;
@@ -59,36 +62,41 @@ async function carregarProdutos() {
 }
 
 
+// ===== MOSTRAR / ESCONDER PIX =====
+const select = document.getElementById("formaPagamento");
+const pixBox = document.getElementById("pixBox");
 
-// ===== CARREGAR FORMAS DE PAGAMENTO =====
-fetch('http://localhost:3001/formapagamento')
-  .then(r => r.json())
-  .then(dados => {
-    const select = document.getElementById('formaPagamento');
+select.addEventListener("change", () => {
+  if (select.value === "pix") {
+    pixBox.style.display = "block";
+  } else {
+    pixBox.style.display = "none";
+  }
+});
 
-    if (dados.length === 0) {
-      select.innerHTML = '<option>Nenhuma forma cadastrada</option>';
-      return;
-    }
+// Já exibe PIX ao carregar a página
+pixBox.style.display = "block";
 
-    dados.forEach(fp => {
-      const op = document.createElement('option');
-      op.value = fp.idformapagamento;
-      op.textContent = fp.nome;
-      select.appendChild(op);
+// ===== BOTÃO COPIAR PIX =====
+document.getElementById("btnCopyPix").addEventListener("click", () => {
+  const input = document.getElementById("pixKeyInput");
+  input.select();
+  input.setSelectionRange(0, 99999); // mobile
+
+  navigator.clipboard.writeText(input.value)
+    .then(() => {
+      alert("Chave PIX copiada!");
+    })
+    .catch(() => {
+      alert("Erro ao copiar a chave.");
     });
-  })
-  .catch(() => {
-    document.getElementById('formaPagamento').innerHTML = '<option>Erro ao carregar</option>';
-  });
-
+});
 
 
 // ===== FINALIZAR PEDIDO =====
 document.getElementById('btnFinalizar').addEventListener('click', async () => {
   const cpf = document.getElementById('cpfCliente').value;
-  const forma = document.getElementById('formaPagamento').value;
-  const obs = document.getElementById('obs').value;
+  const forma = select.value;
   const idpessoa = getIdPessoa();
 
   if (!cpf.trim()) return alert('Informe o CPF');
@@ -103,7 +111,8 @@ document.getElementById('btnFinalizar').addEventListener('click', async () => {
   }
 
   // Calcular total
-  const total = itens.reduce((s, item) => s + (item.preco * item.quantidade), 0);
+  const total = itens.reduce((s, item) => s + (Number(item.valorunitario) * item.quantidade), 0);
+
 
 
   // 1º Criar pedido
@@ -114,7 +123,6 @@ document.getElementById('btnFinalizar').addEventListener('click', async () => {
       datapedido: new Date(),
       idpessoa,
       valortotal: total,
-      observacoes: obs,
       formapagamento: forma
     })
   });
@@ -131,7 +139,8 @@ document.getElementById('btnFinalizar').addEventListener('click', async () => {
         idpedido: pedido.idpedido,
         iditem: item.iditem,
         quantidade: item.quantidade,
-        valorunitario: item.preco
+       valorunitario: Number(item.valorunitario)
+
       })
     });
   }

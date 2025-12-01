@@ -12,7 +12,7 @@
 
     <!-- LISTA DE PRODUTOS -->
     <div class="card produtos-card">
-      <h2>Resumo dos Produtos</h2>
+      <h2>Resumo do Pedido</h2>
       <div id="lista-produtos"></div>
     </div>
 
@@ -25,13 +25,35 @@
       <div class="pagamento-section">
         <h3>Informações de Pagamento</h3>
 
-        <label for="cpfCliente">CPF do Cliente</label>
-        <input type="text" id="cpfCliente" placeholder="000.000.000-00" />
-
         <label for="formaPagamento">Forma de Pagamento</label>
-        <select id="formaPagamento"></select>
+          <select id="formaPagamento">
+            <option value="">selecione a forma de pagamento</option>
+           <option value="pix">PIX</option>
+          </select>
+<div id="pixBox" style="display:none; margin-top:15px;">
+  <h3>Pagamento via PIX</h3>
 
-      </div>
+  <img id="pixQr" src="../../backend/images/qrcode.jpg" alt="QR Code PIX" 
+       style="width:180px; height:180px; border-radius:8px; margin-bottom:10px;">
+
+  <p><strong>Chave PIX:</strong></p>
+
+  <div style="display:flex; gap:10px; align-items:center;">
+    <input 
+      id="pixKeyInput" 
+      type="text" 
+      value="00020126330014br.gov.bcb.pix0111104562129305204000053039865802BR5925MARIA_JULIA_SOARES_DOS_SA6007Mambore610987340-00062290525WUUG03459850176455209679263047AF7"
+      readonly
+      style="flex:1; padding:8px; border:1px solid #ccc; border-radius:6px; font-size:13px;"
+    >
+
+    <button 
+      id="btnCopyPix" 
+      style="padding:8px 12px; background:#2e8b57; color:#fff; border:none; border-radius:6px; cursor:pointer;">
+      Copiar
+    </button>
+  </div>
+</div>
 
       <button class="btn" id="btnFinalizar">Confirmar Pedido</button>
     </div>

@@ -102,6 +102,12 @@ app.use("/api/carrinho", carrinhoRoutes);
 const finalizar_pedidoRoutes = require("./routes/finalizar_pedidoRoutes");
 app.use("/api/finalizar", finalizar_pedidoRoutes);
 
+const pedidoRoutes = require("./routes/pedidoRoutes"); 
+app.use("/pedido", pedidoRoutes);
+
+const pedidoItemRoutes = require("./routes/pedido_itemRoutes");
+app.use("/pedido_item", pedidoItemRoutes);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
