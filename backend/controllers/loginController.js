@@ -1,7 +1,6 @@
 const { query } = require('../database');
 
 // ================== CADASTRO ==================
-// ================== CADASTRO ==================
 exports.cadastrar = async (req, res) => {
   try {
     const { nome, email, senha, cpf, endereco } = req.body;

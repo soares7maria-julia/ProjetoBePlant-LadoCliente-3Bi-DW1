@@ -1,12 +1,14 @@
 const { query } = require("../database");
 
 exports.criarPedido = async (req, res) => {
+  console.log("🔥 criarPedido RECEBEU:", req.body);
+
   try {
     const { datapedido, idpessoa, valortotal, formapagamento } = req.body;
 
     const result = await query(
       `INSERT INTO pedido (datapedido, idpessoa, valortotal, formapagamento)
-       VALUES ($1, $2, $3, $4, $5)
+       VALUES ($1, $2, $3, $4)
        RETURNING idpedido`,
       [datapedido, idpessoa, valortotal, formapagamento]
     );
