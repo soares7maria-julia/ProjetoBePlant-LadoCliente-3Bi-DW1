@@ -33,7 +33,7 @@ exports.finalizarCarrinho = async (req, res) => {
 
     const idpedido = pedido.rows[0].idpedido;
 
-    // 4. Inserir itens do pedido
+    // 4. Inserir itens no pedido
     for (const item of itens.rows) {
       await query(
         `INSERT INTO pedido_item (idpedido, iditem, quantidade, valorunitario)
@@ -46,6 +46,9 @@ exports.finalizarCarrinho = async (req, res) => {
         ]
       );
     }
+
+    // ⚠️ NÃO LIMPA O CARRINHO AQUI!
+    // Só limpa depois que o pagamento for confirmado
 
     res.json({ sucesso: true, idpedido, total });
 

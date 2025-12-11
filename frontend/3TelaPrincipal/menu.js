@@ -43,16 +43,19 @@ function renderizarProdutos() {
   containerAlgumas.innerHTML = "";
   containerOutras.innerHTML = "";
 
-  produtosFiltrados.forEach(produto => {
-    const card = criarCardProduto(produto);
+  // ✅ Primeiros 5 vão para "Todas"
+  const primeirosCinco = produtosFiltrados.slice(0, 5);
+  const restantes = produtosFiltrados.slice(5);
 
-    if (produto.idcategoria === 1) {
-      containerAlgumas.innerHTML += card;
-    } else {
-      containerOutras.innerHTML += card;
-    }
+  primeirosCinco.forEach(produto => {
+    containerAlgumas.innerHTML += criarCardProduto(produto);
+  });
+
+  restantes.forEach(produto => {
+    containerOutras.innerHTML += criarCardProduto(produto);
   });
 }
+
 
 function filtrarProdutos() {
   return todosProdutos.filter(produto => {

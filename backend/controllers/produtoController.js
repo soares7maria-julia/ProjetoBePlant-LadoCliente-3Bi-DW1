@@ -52,31 +52,65 @@ exports.obterProduto = async (req, res) => {
   }
 };
 
-// Criar novo produto
+const path = require("path");
+const fs = require("fs");
+
 exports.criarProduto = async (req, res) => {
   try {
     const { nomeitem, estoqueitem, valorunitario, idcategoria } = req.body;
-    const imagemitem = req.file ? req.file.filename : req.body.imagemitem;
 
-    const sql = `
-      INSERT INTO item (nomeitem, estoqueitem, valorunitario, imagemitem, idcategoria)
-      VALUES ($1, $2, $3, $4, $5)
+    // 1️⃣ cria o produto SEM imagem
+    const sqlInsert = `
+      INSERT INTO item (nomeitem, estoqueitem, valorunitario, idcategoria)
+      VALUES ($1, $2, $3, $4)
       RETURNING iditem
     `;
 
-    const result = await query(sql, [nomeitem, estoqueitem, valorunitario, imagemitem, idcategoria]);
+    const result = await query(sqlInsert, [
+      nomeitem,
+      estoqueitem,
+      valorunitario,
+      idcategoria
+    ]);
+
+    const iditem = result.rows[0].iditem;
+
+    let imagemitem = null;
+
+    // 2️⃣ se veio imagem, renomeia para <iditem>.png
+    if (req.file) {
+      const ext = path.extname(req.file.originalname) || ".png";
+      imagemitem = `${iditem}${ext}`;
+
+      const pastaDestino = path.join(
+        __dirname,
+        "..",
+        "public",
+        "images",
+        imagemitem
+      );
+
+      fs.renameSync(req.file.path, pastaDestino);
+
+      // 3️⃣ atualiza o produto com o nome correto da imagem
+      await query(
+        "UPDATE item SET imagemitem = $1 WHERE iditem = $2",
+        [imagemitem, iditem]
+      );
+    }
 
     res.status(201).json({
-      iditem: result.rows[0].iditem,
+      iditem,
       nomeitem,
       estoqueitem,
       valorunitario,
       imagemitem,
       idcategoria
     });
+
   } catch (err) {
-    console.error('Erro ao criar produto:', err);
-    res.status(500).json({ error: 'Erro ao criar produto' });
+    console.error("Erro ao criar produto:", err);
+    res.status(500).json({ error: "Erro ao criar produto" });
   }
 };
 
@@ -84,26 +118,48 @@ exports.criarProduto = async (req, res) => {
 exports.atualizarProduto = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nomeitem, estoqueitem, valorunitario, idcategoria, imagemNome } = req.body;
-   const imagemitem = req.file ? req.file.filename : req.body.imagemnome;
+    const { nomeitem, estoqueitem, valorunitario, idcategoria } = req.body;
 
-    const sql = `
+    // atualiza dados do produto (sem imagem)
+    const sqlUpdate = `
       UPDATE item
-      SET nomeitem=$1, estoqueitem=$2, valorunitario=$3, imagemitem=$4, idcategoria=$5
-      WHERE iditem=$6
+      SET nomeitem=$1, estoqueitem=$2, valorunitario=$3, idcategoria=$4
+      WHERE iditem=$5
     `;
 
-    const result = await query(sql, [
+    const result = await query(sqlUpdate, [
       nomeitem,
       estoqueitem,
       valorunitario,
-      imagemitem,
       idcategoria,
       id
     ]);
 
     if (result.rowCount === 0) {
-      return res.status(404).json({ error: 'Produto não encontrado' });
+      return res.status(404).json({ error: "Produto não encontrado" });
+    }
+
+    let imagemitem = null;
+
+    // se veio imagem nova, renomeia com id
+    if (req.file) {
+      const ext = path.extname(req.file.originalname) || ".png";
+      imagemitem = `${id}${ext}`;
+
+      const pastaDestino = path.join(
+        __dirname,
+        "..",
+        "public",
+        "images",
+        imagemitem
+      );
+
+      fs.renameSync(req.file.path, pastaDestino);
+
+      await query(
+        "UPDATE item SET imagemitem = $1 WHERE iditem = $2",
+        [imagemitem, id]
+      );
     }
 
     res.json({
@@ -114,11 +170,13 @@ exports.atualizarProduto = async (req, res) => {
       imagemitem,
       idcategoria
     });
+
   } catch (err) {
-    console.error('Erro ao atualizar produto:', err);
-    res.status(500).json({ error: 'Erro ao atualizar produto' });
+    console.error("Erro ao atualizar produto:", err);
+    res.status(500).json({ error: "Erro ao atualizar produto" });
   }
 };
+
 
 // Deletar produto
 exports.deletarProduto = async (req, res) => {
